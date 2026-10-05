@@ -303,3 +303,22 @@
 .dh-figma-export *, .dh-figma-export *::before, .dh-figma-export *::after { animation: none !important; transition: none !important; }
 .dh-figma-export .marquee-track { transform: none; }
 .dh-figma-export .dh-reveal { opacity: 1; transform: none; }
+
+/* Your data. Our responsibility. — sits directly on the page grid. */
+.dh-trust { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: center; padding-block: 0 var(--dh-section-y); }
+.dh-trust h2 { font-size: clamp(36px, 4.6vw, 64px); font-weight: 700; line-height: 1.04; letter-spacing: -.035em; color: var(--dh-ink); }
+.dh-trust__copy p { max-width: 30em; margin-top: 24px; font-size: 20px; line-height: 1.55; color: var(--muted); }
+.dh-trust__list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; margin: 0; padding: 0; list-style: none; }
+.dh-trust__item { display: grid; gap: 6px; padding: 32px 28px; border: 1px solid var(--dh-line); border-radius: 22px; background: var(--dh-surface); box-shadow: var(--dh-shadow-sm); }
+.dh-trust__icon { display: grid; place-items: center; width: 52px; height: 52px; margin-bottom: 18px; border-radius: 14px; background: color-mix(in srgb, var(--dh-buyer) 12%, #fff); color: #0b7a40; }
+.dh-trust__name { font-size: clamp(22px, 2vw, 28px); font-weight: 700; letter-spacing: -.025em; line-height: 1.15; color: var(--dh-ink); }
+.dh-trust__status { font-size: 17px; color: var(--muted); }
+@media (max-width: 1023px) {
+  .dh-trust { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 479px) {
+  .dh-trust__copy p { font-size: 18px; }
+  .dh-trust__list { grid-template-columns: minmax(0, 1fr); }
+  .dh-trust__item { grid-template-columns: 52px minmax(0, 1fr); column-gap: 16px; align-items: center; padding: 20px; }
+  .dh-trust__icon { grid-row: span 2; margin-bottom: 0; }
+}

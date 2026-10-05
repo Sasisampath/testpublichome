@@ -9,6 +9,7 @@ import { MarketplaceTabs } from "@/components/home/marketplace-tabs";
 import { BackedBySection } from "@/components/home/backed-by-section";
 import { JazzClubClose } from "@/components/home/distribution/jazzclub-section";
 import { CustomerProof } from "@/components/home/customer-proof";
+import { DataResponsibilitySection } from "@/components/home/data-responsibility-section";
 import { pageSeo } from "@/lib/seo";
 import { IS_FIGMA_EXPORT } from "@/lib/figma-export";
 import "@/components/home/distribution/homepage.css";
@@ -29,6 +30,7 @@ export default function HomePage() {
       <MarketplaceTabs />
       <BackedBySection />
       <CustomerProof />
+      <DataResponsibilitySection />
       <JazzClubClose />
     </main>
     <Footer />
