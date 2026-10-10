@@ -10,15 +10,17 @@ export function NavItem({
   children,
   onNavigate,
   role,
+  ariaLabel,
 }: {
   href: NavDestination;
   className?: string;
   children: ReactNode;
   onNavigate?: () => void;
   role?: string;
+  ariaLabel?: string;
 }) {
   if (href) {
-    return <Link href={href} className={className} onClick={onNavigate} role={role}>{children}</Link>;
+    return <Link href={href} className={className} onClick={onNavigate} role={role} aria-label={ariaLabel}>{children}</Link>;
   }
-  return <button type="button" className={className} onClick={onNavigate} role={role}>{children}</button>;
+  return <button type="button" className={className} onClick={onNavigate} role={role} aria-label={ariaLabel}>{children}</button>;
 }

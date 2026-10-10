@@ -42,9 +42,9 @@ export const FOOTER_LEGAL: { label: string; href: NavDestination }[] = [
 ];
 
 // "Summarize with AI" targets; not wired in this build.
-export const AI_SUMMARY_LINKS: { label: string; href: NavDestination }[] = [
-  { label: "ChatGPT", href: null },
-  { label: "Claude", href: null },
-  { label: "Gemini", href: null },
-  { label: "Grok", href: null },
+export const AI_SUMMARY_LINKS: { label: string; logo: string; href: NavDestination }[] = [
+  { label: "ChatGPT", logo: "/ai-logos/chatgpt.svg", href: null },
+  { label: "Claude", logo: "/ai-logos/claude.svg", href: null },
+  { label: "Gemini", logo: "/ai-logos/gemini.svg", href: null },
+  { label: "Grok", logo: "/ai-logos/grok.svg", href: null },
 ];

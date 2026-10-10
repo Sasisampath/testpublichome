@@ -1,6 +1,5 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ChevronRight, Sparkles } from "lucide-react";
 import { AI_SUMMARY_LINKS, FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
 import { NavItem } from "@/components/ui/nav-item";
 import "./footer.css";
@@ -72,12 +71,11 @@ export function Footer() {
 
             <div className="site-footer__ai">
               <p className="site-footer__title">Summarize with AI what JazzHQ does:</p>
-              <div className="site-footer__ai-grid">
+              <div className="site-footer__ai-logos">
                 {AI_SUMMARY_LINKS.map((item) => (
-                  <NavItem key={item.label} href={item.href} className="site-footer__ai-btn">
-                    <Sparkles size={20} strokeWidth={1.75} aria-hidden="true" />
-                    <span>{item.label}</span>
-                    <ChevronRight size={18} strokeWidth={2} aria-hidden="true" />
+                  <NavItem key={item.label} href={item.href} className="site-footer__ai-logo" ariaLabel={`Summarize JazzHQ with ${item.label}`}>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={item.logo} alt="" width={30} height={30} loading="lazy" />
                   </NavItem>
                 ))}
               </div>

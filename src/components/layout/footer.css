@@ -21,10 +21,11 @@
 .site-footer__link:hover { color: #fff; }
 
 .site-footer__ai { padding-left: clamp(24px, 3.4vw, 52px); border-left: 1px solid rgb(255 255 255 / .12); }
-.site-footer__ai-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; margin-top: 14px; }
-.site-footer__ai-btn { display: flex; align-items: center; gap: 12px; min-height: 48px; padding: 10px 14px; border-radius: 8px; background: rgb(255 255 255 / .08); color: #fff; font-size: 15px; font-weight: 500; text-align: left; cursor: pointer; transition: background-color .2s; }
-.site-footer__ai-btn:hover { background: rgb(255 255 255 / .14); }
-.site-footer__ai-btn span { flex: 1; min-width: 0; }
+
+.site-footer__ai-logos { display: flex; flex-wrap: wrap; align-items: center; gap: 20px clamp(32px, 3.4vw, 48px); margin-top: 22px; }
+.site-footer__ai-logo { display: block; padding: 4px; opacity: .72; cursor: pointer; transition: opacity .2s, transform .2s; }
+.site-footer__ai-logo:hover, .site-footer__ai-logo:focus-visible { opacity: 1; transform: translateY(-2px); }
+.site-footer__ai-logo img { display: block; width: auto; height: 30px; }
 
 .site-footer__bottom { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 24px; padding-block: 18px; border-top: 1px solid rgb(255 255 255 / .12); font-size: 14px; color: rgb(255 255 255 / .72); }
 .site-footer__legal { display: flex; align-items: center; }
