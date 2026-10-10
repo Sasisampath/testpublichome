@@ -23,8 +23,8 @@ export function createTurntable(canvas: HTMLCanvasElement, onFailure: () => void
     art.width = art.height = 512;
     const ctx = art.getContext("2d")!;
     const css = getComputedStyle(canvas);
-    const color = audience === "vendor" ? css.getPropertyValue("--cta-vendor") : audience === "partner" ? css.getPropertyValue("--cta-partner") : css.getPropertyValue("--button-dark");
-    ctx.fillStyle = color.trim() || "#131315";
+    const color = css.getPropertyValue(audience ? `--color-${audience}` : "--color-text-primary");
+    ctx.fillStyle = color.trim() || "#242424";
     ctx.beginPath(); ctx.arc(256, 256, 256, 0, Math.PI * 2); ctx.fill();
     ctx.strokeStyle = "rgba(255,255,255,.45)";
     [226, 211].forEach(radius => { ctx.beginPath(); ctx.arc(256, 256, radius, 0, Math.PI * 2); ctx.stroke(); });

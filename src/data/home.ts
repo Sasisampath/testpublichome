@@ -116,7 +116,7 @@ export const CUSTOMER_STORIES: CustomerStory[] = [
     role: "Vice President",
     portrait: "/assets/testimonials/seun-obatuyi.webp",
     quote: "With JazzHQ, we were able to find the right partners, engage deeply with them and double revenue within a year.",
-    metric: { value: "2×", label: "revenue within a year" },
+    metric: { value: "2x", label: "Revenue within a year" },
     logo: "/assets/testimonials/logo-seamlesshr.svg",
   },
 ];

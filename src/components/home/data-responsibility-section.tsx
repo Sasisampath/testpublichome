@@ -1,31 +1,37 @@
-import { ShieldCheck } from "lucide-react";
+import Image from "next/image";
 import { Reveal } from "@/components/home/reveal";
 
-// Static, approved content only: the same compliance statement as the top
-// banner. Add items here only when their wording has been approved.
+// Static content from the approved homepage design. Change items here only
+// when the wording has been approved.
 const CERTIFICATIONS = [
-  { name: "ISO 27001", status: "Compliant" },
-  { name: "SOC 2 Type I", status: "Compliant" },
+  { name: "ISO 27001", detail: "Information Security Management", badge: "/assets/trust/iso-27001.png" },
+  { name: "SOC 2 Type I", detail: "Security Controls Audit Report", badge: "/assets/trust/soc-2.png" },
+  { name: "GDPR", detail: "European Union data security law.", badge: "/assets/trust/gdpr.png" },
 ];
 
 export function DataResponsibilitySection() {
   return (
     <section className="dh-trust dh-container" aria-labelledby="trust-title">
-      <Reveal className="dh-trust__copy">
-        <h2 id="trust-title">Your data.<br />Our responsibility.</h2>
-        <p>JazzHQ is ISO 27001 and SOC 2 Type I Compliant.</p>
+      <Reveal className="dh-section-head">
+        <h2 id="trust-title">Your data. Our responsibility.</h2>
       </Reveal>
 
       <Reveal>
         <ul className="dh-trust__list">
           {CERTIFICATIONS.map((item) => (
             <li key={item.name} className="dh-trust__item">
-              <span className="dh-trust__icon" aria-hidden="true"><ShieldCheck size={26} strokeWidth={1.8} /></span>
-              <span className="dh-trust__name">{item.name}</span>
-              <span className="dh-trust__status">{item.status}</span>
+              <Image src={item.badge} alt="" width={80} height={80} className="dh-trust__badge" />
+              <span className="dh-trust__text">
+                <span className="dh-trust__name">{item.name}</span>
+                <span className="dh-trust__detail">{item.detail}</span>
+              </span>
             </li>
           ))}
         </ul>
+        <p className="dh-trust__note">
+          <Image src="/assets/trust/shield.svg" alt="" width={18} height={18} />
+          Independently audited. Continuously monitored. Built for enterprise trust.
+        </p>
       </Reveal>
     </section>
   );

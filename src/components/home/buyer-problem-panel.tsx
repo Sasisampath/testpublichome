@@ -7,7 +7,7 @@ import { IS_FIGMA_EXPORT } from "@/lib/figma-export";
 // Illustrative prompts only. The panel depicts the buyer conversation;
 // the real entry point is the "Talk to Buyer Agent" CTA beside it.
 const EXAMPLE_PROBLEMS = [
-  "Cut first-response time in customer support",
+  "Help our team spend less time on manual work.",
   "Qualify inbound leads before they reach sales",
   "Pull data out of invoices and contracts",
 ];
@@ -35,6 +35,7 @@ export function BuyerProblemPanel() {
       <div className="dh-window-bar" aria-hidden="true"><span /><span /><span /></div>
       <div className="dh-buyer-panel__body" aria-hidden="true">
         <p className="dh-buyer-panel__title">What are you trying to solve?</p>
+        <p className="dh-buyer-panel__hint">Start with your business challenge.</p>
         <div className="dh-buyer-panel__field">
           <span key={index} className="dh-buyer-panel__prompt">{EXAMPLE_PROBLEMS[index]}</span>
           <span className="dh-buyer-panel__send"><ArrowUp size={18} strokeWidth={2.4} /></span>
@@ -47,6 +48,7 @@ export function BuyerProblemPanel() {
             <li key={step}><span>{String(i + 1).padStart(2, "0")}</span>{step}</li>
           ))}
         </ol>
+        <p className="dh-buyer-panel__example">Example conversation — connect with our team to get started.</p>
       </div>
     </div>
   );

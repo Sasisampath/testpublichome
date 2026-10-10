@@ -40,52 +40,31 @@ function StepsPanel({ config }: { config: MarketplaceConfig }) {
     <div className="dh-how-grid">
       <div className="dh-how-steps">
         {config.intro && <p className="dh-how-intro">{config.intro}</p>}
-        <ol className="dh-steps">
-          {config.panels.map((step, i) => {
-            const open = i === active;
-            return (
-              <li key={step.id} className={`dh-step ${open ? "is-open" : ""}`}>
-                <button
-                  type="button"
-                  className="dh-step__head"
-                  aria-expanded={open}
-                  aria-controls={`dh-step-${config.role}-${step.id}`}
-                  onClick={() => setActive(i)}
-                >
-                  <span className="dh-step__num">{String(i + 1).padStart(2, "0")}</span>
-                  <span className="dh-step__title">{step.title}</span>
-                </button>
-                <div
-                  id={`dh-step-${config.role}-${step.id}`}
-                  className="dh-step__body"
-                  aria-hidden={!open}
-                  inert={!open}
-                >
-                  <div>
-                    {step.description && <p>{step.description}</p>}
-                    {step.points && <ul>{step.points.map((point) => <li key={point}>{point}</li>)}</ul>}
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ol>
-        <AgentCta config={config} />
-      </div>
-
-      <figure className="dh-product-window">
-        <div className="dh-window-bar" aria-hidden="true"><span /><span /><span /></div>
-        <div className="dh-product-window__shot">
-          <Image
-            key={panel.image}
-            src={panel.image}
-            alt={panel.imageAlt}
-            fill
-            sizes="(max-width: 1023px) 92vw, 640px"
-            className="dh-product-window__img"
-          />
+        <div className="dh-step-selectors" aria-label={`${config.tabLabel} steps`}>
+          {config.panels.map((step, i) => (
+            <button key={step.id} type="button" className={`dh-step-choice ${i === active ? "is-open" : ""}`}
+              aria-pressed={i === active} aria-controls={`step-content-${config.role}`} onClick={() => setActive(i)}>
+              <span className="dh-step__num">{String(i + 1).padStart(2, "0")}</span>
+              <span className="dh-step__title">{step.title}</span>
+              <span className="dh-step-chevron" aria-hidden="true">↗</span>
+            </button>
+          ))}
         </div>
+        <div id={`step-content-${config.role}`} className="dh-active-step" aria-live="polite" aria-atomic="true">
+          <h3>{panel.title}</h3>
+          {panel.description && <p>{panel.description}</p>}
+          {panel.points && <ul>{panel.points.map(point => <li key={point}>{point}</li>)}</ul>}
+        </div>
+      </div>
+      <figure className="dh-product-window">
+        <div className="dh-window-bar" aria-hidden="true"><span /><span /><span /><small>JazzHQ / {panel.title}</small></div>
+        <div className="dh-product-window__shot">
+          <Image key={panel.image} src={panel.image} alt={panel.imageAlt} fill
+            sizes="(max-width: 767px) 90vw, (max-width: 1023px) 55vw, 660px" className="dh-product-window__img" />
+        </div>
+        <figcaption>{String(active + 1).padStart(2, "0")} / {String(config.panels.length).padStart(2, "0")}<span>{panel.title}</span></figcaption>
       </figure>
+      <div className="dh-how-cta"><AgentCta config={config} /></div>
     </div>
   );
 }
@@ -156,7 +135,7 @@ export function MarketplaceTabs() {
         role="tabpanel"
         id="marketplace-audience-panel"
         aria-labelledby={`marketplace-tab-${role}`}
-        className={`dh-how-panel dh-accent--${role}`}
+        className={`dh-how-panel dh-how-panel--${role} dh-accent--${role}`}
       >
         {role === "buyer" ? <BuyerPanel config={config} /> : <StepsPanel config={config} />}
       </div>

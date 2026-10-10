@@ -95,7 +95,7 @@ export default function RootLayout({
       <head>
         <ConsentScripts />
       </head>
-      <body className="flex min-h-dvh flex-col bg-[#f7f6f2] font-sans text-[#111827]">
+      <body className="flex min-h-dvh flex-col bg-[#f7f6f2] font-sans text-[var(--color-text-primary)]">
         {children}
         <AnalyticsScripts />
     </body>

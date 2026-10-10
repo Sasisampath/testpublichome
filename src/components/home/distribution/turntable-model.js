@@ -237,7 +237,7 @@ import * as THREE from "three";
         return c;
       }
 
-      /* brass front plaque: “jazzHQ — AI DISTRIBUTION PLATFORM” */
+      /* brass front plaque: “JazzHQ — AI DISTRIBUTION PLATFORM” */
       function texPlaque(w = 768, h = 224) {
         const c = cnv(w, h),
           x = c.getContext("2d");
@@ -255,7 +255,7 @@ import * as THREE from "three";
         x.textAlign = "center";
         x.fillStyle = "#e8c684";
         x.font = `600 ${h * 0.34}px 'Cormorant Garamond', serif`;
-        x.fillText("jazzHQ", w / 2, h * 0.48);
+        x.fillText("JazzHQ", w / 2, h * 0.48);
         x.font = `600 ${h * 0.115}px Inter, sans-serif`;
         x.fillStyle = "#caa25e";
         x.save();
