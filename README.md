@@ -18,8 +18,8 @@ Checks: `npm run typecheck`, `npm run lint`, `npm run build`.
 Frontend approval build with four routes: `/` (homepage) and three journey form
 pages that share one component (`src/components/form-page`): `/for-vendors`,
 `/for-partners` and `/for-buyers`. Each has the portrait video, the Trusted By
-ticker and a Fillout form in an iframe over its Figma background image
-(`public/forms/`). Copy, form IDs and images are in `src/data/form-pages.ts`;
+ticker and a Fillout form in an iframe on a solid role-colour panel. Copy and
+form IDs are in `src/data/form-pages.ts`;
 the buyer form ID is not set yet. There is no backend or API code.
 
 All destinations live in `src/data/navigation.ts`. An item with `href: null` is

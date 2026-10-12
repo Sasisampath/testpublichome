@@ -1,6 +1,6 @@
-/* Functional black footer + cropped JAZZ·HQ brand reveal. */
-.site-footer { border-radius: 0 0 18px 18px; background: var(--footer-bg); color: #fff; }
-.site-footer__inner { max-width: var(--max-content); margin-inline: auto; padding: 36px var(--page-padding) 0; }
+/* Black footer, ending with the full white JAZZ·HQ wordmark. */
+.site-footer { background: var(--footer-bg, #0a090b); color: #fff; }
+.site-footer__inner { max-width: var(--max-content, 1400px); margin-inline: auto; padding: 36px var(--page-padding, 24px) 0; }
 .site-footer__main { display: grid; grid-template-columns: minmax(0, 1.5fr) auto minmax(0, 1.35fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
 
 .site-footer__logo img { display: block; width: auto; height: 26px; }
@@ -32,8 +32,8 @@
 .site-footer__legal .site-footer__link { font-size: 14px; }
 .site-footer__legal .site-footer__link + .site-footer__link { margin-left: 20px; padding-left: 20px; border-left: 1px solid rgb(255 255 255 / .25); }
 
-.site-wordmark { height: calc(10.4vw + 4px); overflow: hidden; padding-top: 4px; }
-.site-wordmark img { display: block; width: 88vw; max-width: none; height: auto; margin-inline: auto; }
+/* Full logo, never cropped: it scales with the container and keeps its own ratio. */
+.site-footer__wordmark { display: block; width: 80%; height: auto; margin-inline: auto; padding-block: clamp(28px, 3.6vw, 52px) clamp(24px, 2.6vw, 36px); }
 
 @media (max-width: 1023px) {
   .site-footer__main { grid-template-columns: minmax(0, 1fr) auto; }

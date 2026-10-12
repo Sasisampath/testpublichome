@@ -1,6 +1,6 @@
 import { GridBackground } from "@/components/layout/grid-background";
 import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import Footer from "@/components/shared/footer";
 import { LogoStripMarquee } from "@/components/shared/logo-strip-marquee";
 import { FormVideo } from "@/components/form-page/form-video";
 import { TRUSTED_BY_LOGOS } from "@/data/home";
@@ -28,10 +28,8 @@ export function FormPage({ variant }: { variant: JourneyKey }) {
             </div>
           </div>
 
-          <div className="vf-panel">
-            {/* Exact Figma image, placed as in the frame: a 1606×1071 layer centred behind the form card. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="vf-panel__bg" src={page.backgroundImage} alt="" />
+          {/* Solid role colour behind the white form card. */}
+          <div className={`vf-panel vf-panel--${variant}`}>
             {page.filloutId ? (
               // The existing Fillout form, embedded as-is; Fillout hosts it and handles submission.
               <iframe

@@ -31,12 +31,13 @@ function LinkColumn({ title, links }: { title: string; links: typeof FOOTER_COMP
   );
 }
 
+// Shared site footer. Self-contained: drop <Footer /> at the end of any page.
+// Links come from src/data/navigation.ts (href: null = shown but not wired yet).
 export function Footer() {
   const year = new Date().getFullYear();
 
   return (
-    <>
-      <footer className="site-footer">
+    <footer className="site-footer">
         <div className="site-footer__inner">
           <div className="site-footer__main">
             <div className="site-footer__brand">
@@ -90,14 +91,13 @@ export function Footer() {
               ))}
             </div>
           </div>
-        </div>
-      </footer>
 
-      {/* Final-scroll brand reveal: the wordmark is intentionally cropped by the page edge. */}
-      <div className="site-wordmark" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/assets/logo/jazzhq-wordmark.svg" alt="" loading="lazy" />
-      </div>
-    </>
+          {/* Closing brand mark: the full white wordmark, inside the black footer. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="site-footer__wordmark" src="/assets/logo/jazzhq-wordmark-white.svg" alt="" aria-hidden="true" loading="lazy" />
+        </div>
+    </footer>
   );
 }
+
+export default Footer;

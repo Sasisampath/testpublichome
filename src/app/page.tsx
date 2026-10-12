@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { GridBackground } from "@/components/layout/grid-background";
 import { TopBanner } from "@/components/layout/top-banner";
 import { Header } from "@/components/layout/header";
-import { Footer } from "@/components/layout/footer";
+import Footer from "@/components/shared/footer";
 import { TrustedByStrip } from "@/components/home/trusted-by-strip";
 import { DistributionHero } from "@/components/home/distribution/hero";
 import { MarketplaceTabs } from "@/components/home/marketplace-tabs";

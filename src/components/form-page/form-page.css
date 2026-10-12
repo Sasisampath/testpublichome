@@ -22,8 +22,9 @@
 .vf-ticker .logo-strip-marquee__track-wrap { mask-image: linear-gradient(to right, #000 82%, transparent); }
 
 .vf-panel { position: relative; min-width: 0; overflow: hidden; padding: 64px clamp(16px, 11.7%, 103px); border-radius: 20px; }
-/* Figma places the image as a 1606×1071 layer centred on the panel (cover inside that box). */
-.vf-panel__bg { position: absolute; top: 50%; left: 50%; height: 100%; min-width: 100%; max-width: none; aspect-ratio: 1606 / 1071; object-fit: cover; transform: translate(-50%, -50%); pointer-events: none; }
+.vf-panel--buyer { background: var(--color-buyer); }
+.vf-panel--vendor { background: var(--color-vendor); }
+.vf-panel--partner { background: var(--color-partner); }
 /* Sized to the form's rendered height (Fillout does not scale with width),
    so the gradient panel is never taller than the form needs. */
 .vf-fillout { position: relative; display: block; width: 100%; height: 760px; border: 0; border-radius: 18px; background: #fff; }
