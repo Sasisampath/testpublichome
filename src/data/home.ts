@@ -101,22 +101,50 @@ export type CustomerStory = {
   company: string;
   person: string;
   role: string;
+  /** Cut-out portrait from Figma, shown on a tile in the story's colour. */
   portrait: string;
+  /** Portrait size and offset inside the 260×217 tile, as placed in Figma (px at full size). */
+  portraitFit: { size: number; x: number; y: number };
+  tone: "buyer" | "vendor" | "partner";
   quote: string;
   metric: { value: string; label: string };
   logo: string;
 };
 
-// Homepage "Trusted by" stories. Only approved stories belong here; the
-// section shows navigation automatically once there is more than one (max 3).
+// Homepage "Trusted by" stories, from Figma node 3052:1100. One is shown at a
+// time; pagination and auto-rotation appear when there is more than one.
 export const CUSTOMER_STORIES: CustomerStory[] = [
   {
     company: "SeamlessHR",
     person: "Seun Obatuyi",
-    role: "Vice President",
-    portrait: "/assets/testimonials/seun-obatuyi.webp",
+    role: "Vice President, SeamlessHR",
+    portrait: "/assets/testimonials/seun-obatuyi-cutout.png",
+    portraitFit: { size: 238.3, x: 0, y: 0 },
+    tone: "partner",
     quote: "With JazzHQ, we were able to find the right partners, engage deeply with them and double revenue within a year.",
     metric: { value: "2x", label: "Revenue within a year" },
     logo: "/assets/testimonials/logo-seamlesshr.svg",
+  },
+  {
+    company: "Monday.com",
+    person: "Chhavi Porwal",
+    role: "Regional Partnerships, Monday.com",
+    portrait: "/assets/testimonials/chhavi-porwal-cutout.png",
+    portraitFit: { size: 227.5, x: 0, y: 0 },
+    tone: "buyer",
+    quote: "I'm really proud of the partnership we've built with JazzHQ and I look forward to working with them in the future.",
+    metric: { value: "2x", label: "Revenue within a year" },
+    logo: "/assets/logos/monday.svg",
+  },
+  {
+    company: "HubSpot",
+    person: "Shashidhar Bellur",
+    role: "Partner Development, HubSpot",
+    portrait: "/assets/testimonials/shashidhar-bellur-cutout.png",
+    portraitFit: { size: 238, x: -11, y: 31 },
+    tone: "vendor",
+    quote: "The evening has been fantastic, lots of lived experiences from people. Loved working with the Jazz HQ team.",
+    metric: { value: "2x", label: "Revenue within a year" },
+    logo: "/assets/logos/hubspot-trusted.svg",
   },
 ];

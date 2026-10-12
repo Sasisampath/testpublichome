@@ -1,7 +1,7 @@
 import Image from "next/image";
-import { PillButton } from "@/components/ui/pill-button";
 import { Reveal } from "@/components/home/reveal";
 
+// Collage from Figma node 3013:13924: the "15+" card plus three event photos.
 const PHOTOS = [
   { src: "/assets/jazzclub/cinematic/room-14.webp", alt: "JazzHQ community members together at a JazzClub event", className: "dh-club-photo--a" },
   { src: "/assets/jazzclub/cinematic/room-01.webp", alt: "Members connecting at a JazzClub community event", className: "dh-club-photo--b" },
@@ -13,14 +13,18 @@ export function JazzClubClose() {
     <div className="dh-club-inner dh-container">
       <Reveal className="dh-club-copy">
         <h2 id="club-title">Still not sure?<br />Meet us at the next<br /><span>JazzClub event</span></h2>
-        <p>We regularly host meetups across 15+ cities. Come and experience what it is like to be part of the world&rsquo;s #1 AI community.</p>
-        <div className="dh-club-stat"><strong>15+</strong><span>cities</span></div>
-        <PillButton>Find the Next JazzClub</PillButton>
+        <p>We regularly host meetups across 15+ cities.{" "}<br />Come and experience what it is like to be part of the world&rsquo;s #1 AI community.</p>
+        {/* The events page is not part of this build, so the CTA does not navigate yet. */}
+        <button type="button" className="dh-outline-cta">Find the Next JazzClub →</button>
       </Reveal>
       <div className="dh-club-photos">
+        <div className="dh-club-cities">
+          <p><strong>15+</strong><Image src="/assets/jazzclub/globe.svg" alt="" width={34} height={34} /></p>
+          <span>Cities worldwide</span>
+        </div>
         {PHOTOS.map((photo) => (
           <figure key={photo.src} className={`dh-club-photo ${photo.className}`}>
-            <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 767px) 80vw, 34vw" className="object-cover" />
+            <Image src={photo.src} alt={photo.alt} fill sizes="(max-width: 767px) 60vw, 370px" className="object-cover" />
           </figure>
         ))}
       </div>
