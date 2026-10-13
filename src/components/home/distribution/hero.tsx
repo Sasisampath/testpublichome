@@ -3,6 +3,7 @@ import { useState } from "react";
 import { AUDIENCES, AUDIENCE_ORDER, type Audience } from "./audiences";
 import { VinylScene } from "./vinyl-scene";
 import { NavItem } from "@/components/ui/nav-item";
+import { VinylIcon } from "@/components/ui/vinyl-icon";
 
 export function DistributionHero() {
   // The turntable starts with no record; the selector and copy default to Buyer.
@@ -21,7 +22,7 @@ export function DistributionHero() {
       {AUDIENCE_ORDER.map(key => {
         const item = AUDIENCES[key];
         return <button type="button" key={key} className={`dh-record dh-accent--${key}`} aria-pressed={shown === key} aria-controls="audience-detail" onClick={() => setAudience(key)}>
-          <span className="dh-sleeve-art" aria-hidden="true"><span className="dh-disc"><span>{item.number}</span></span><span className="dh-sleeve"><span className="dh-ring" /></span></span>
+          <VinylIcon journey={key} size={54} />
           <span className="dh-record-name">{item.heading}</span>
           <span className="dh-record-arrow" aria-hidden="true">{shown === key ? "↗" : "+"}</span>
         </button>;

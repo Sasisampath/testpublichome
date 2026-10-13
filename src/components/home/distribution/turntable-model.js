@@ -392,17 +392,8 @@ export function buildTurntable(canvas) {
         m.position.y = -0.72;
         scene.add(m);
       }
-      /* ground plane receives the crisper key-light shadow */
-      {
-        const m = new THREE.Mesh(
-          new THREE.PlaneGeometry(30, 30),
-          new THREE.ShadowMaterial({ opacity: 0.16 }),
-        );
-        m.rotation.x = -Math.PI / 2;
-        m.position.y = -0.715;
-        m.receiveShadow = true;
-        scene.add(m);
-      }
+      /* No shadow-receiving ground plane: its key-light shadow was clipped by the
+         light frustum and read as a hard vertical cut. The soft contact shadow above stays. */
 
       /* ══════════════════════════════════════════════════════════════
    4 · THE TURNTABLE — every part procedural geometry

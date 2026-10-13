@@ -34,13 +34,6 @@ export function VinylScene({ audience }: { audience: Audience | null }) {
       </div>}
       {!IS_FIGMA_EXPORT && <canvas ref={canvas} className="dh-canvas" style={{ opacity: status === "ready" ? 1 : 0 }} aria-label="Interactive JazzHQ turntable. Drag horizontally to rotate, or use the buttons below." />}
     </div>
-    <div className="dh-scene-caption"><span>{status === "fallback" ? "JazzHQ / AI Distribution" : "Drag to explore · Choose a record below"}</span>
-      {(status === "ready" || IS_FIGMA_EXPORT) && <div className="dh-scene-controls">
-        <button type="button" onClick={() => controller.current?.rotate(-1)} aria-label="Rotate turntable left">↶</button>
-        <button type="button" onClick={() => controller.current?.reset()} aria-label="Reset turntable view">Reset</button>
-        <button type="button" onClick={() => controller.current?.rotate(1)} aria-label="Rotate turntable right">↷</button>
-        <button type="button" onClick={() => controller.current?.pause()} aria-label="Pause record rotation">Ⅱ</button>
-      </div>}
-    </div>
+    <p className="dh-scene-caption">{status === "fallback" ? "JazzHQ / AI Distribution" : "Drag to explore · Choose a record below"}</p>
   </div>;
 }
