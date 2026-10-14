@@ -2,6 +2,8 @@ import Link from "next/link";
 import Image from "next/image";
 import { AI_SUMMARY_LINKS, FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
 import { NavItem } from "@/components/ui/nav-item";
+import { FooterTip } from "./footer-tip";
+import { FooterWordmark } from "./footer-wordmark";
 import "./footer.css";
 
 const SOCIAL_LINKS = [
@@ -13,9 +15,9 @@ const SOCIAL_LINKS = [
 ] as const;
 
 const TRUST_MARKS = [
-  { src: "/assets/trust/iso-27001.png", alt: "ISO 27001" },
-  { src: "/assets/trust/soc-2.png", alt: "SOC 2 Type I" },
-  { src: "/assets/trust/gdpr.png", alt: "GDPR" },
+  { src: "/assets/trust/iso-27001.png", title: "ISO 27001", description: "International standard for information security management systems." },
+  { src: "/assets/trust/soc-2.png", title: "SOC 2 Type I", description: "Independent assessment of security controls at a point in time." },
+  { src: "/assets/trust/gdpr.png", title: "GDPR", description: "European Union regulation for data protection and privacy." },
 ] as const;
 
 function LinkColumn({ title, links }: { title: string; links: typeof FOOTER_COMPANY }) {
@@ -57,8 +59,17 @@ export function Footer() {
               </div>
 
               <ul className="site-footer__marks" role="list">
-                {TRUST_MARKS.map((mark) => (
-                  <li key={mark.alt}><Image src={mark.src} alt={mark.alt} width={60} height={60} /></li>
+                {TRUST_MARKS.map((mark, index) => (
+                  <li key={mark.title}>
+                    <FooterTip
+                      align={index === 0 ? "start" : "center"}
+                      tip={<><span className="site-tip__title">{mark.title}</span><span className="site-tip__desc">{mark.description}</span></>}
+                    >
+                      <button type="button" className="site-footer__mark" aria-label={`${mark.title}: ${mark.description}`}>
+                        <Image src={mark.src} alt="" width={60} height={60} />
+                      </button>
+                    </FooterTip>
+                  </li>
                 ))}
               </ul>
 
@@ -73,11 +84,13 @@ export function Footer() {
             <div className="site-footer__ai">
               <p className="site-footer__title">Summarize with AI what JazzHQ does:</p>
               <div className="site-footer__ai-logos">
-                {AI_SUMMARY_LINKS.map((item) => (
-                  <NavItem key={item.label} href={item.href} className="site-footer__ai-logo" ariaLabel={`Summarize JazzHQ with ${item.label}`}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={item.logo} alt="" width={30} height={30} loading="lazy" />
-                  </NavItem>
+                {AI_SUMMARY_LINKS.map((item, index) => (
+                  <FooterTip key={item.label} align={index === 0 ? "start" : index === AI_SUMMARY_LINKS.length - 1 ? "end" : "center"} tip={`Ask ${item.label}`}>
+                    <NavItem href={item.href} className="site-footer__ai-logo" ariaLabel={`Ask ${item.label}`}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={item.logo} alt="" width={30} height={30} loading="lazy" />
+                    </NavItem>
+                  </FooterTip>
                 ))}
               </div>
             </div>
@@ -92,9 +105,8 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Closing brand mark: the full white wordmark, inside the black footer. */}
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="site-footer__wordmark" src="/assets/logo/jazzhq-wordmark-white.svg" alt="" aria-hidden="true" loading="lazy" />
+          {/* Closing brand mark: full white wordmark with a scroll-driven reveal. */}
+          <FooterWordmark />
         </div>
     </footer>
   );
