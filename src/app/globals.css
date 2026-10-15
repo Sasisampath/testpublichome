@@ -168,7 +168,7 @@ body {
 .logo-strip-marquee__logo {
   display: block;
   width: auto;
-  height: 28px;
+  height: calc(28px * var(--logo-scale, 1));
   max-width: 140px;
   object-fit: contain;
   opacity: 0.85;
@@ -180,7 +180,7 @@ body {
     padding-inline: 48px;
   }
   .logo-strip-marquee__logo {
-    height: 32px;
+    height: calc(32px * var(--logo-scale, 1));
     max-width: 160px;
   }
 }

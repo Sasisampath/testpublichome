@@ -38,6 +38,7 @@ export function LogoStripMarquee({
                 width={160}
                 height={40}
                 className="logo-strip-marquee__logo"
+                style={logo.scale ? ({ "--logo-scale": logo.scale } as React.CSSProperties) : undefined}
               />
             </div>
           ))}
