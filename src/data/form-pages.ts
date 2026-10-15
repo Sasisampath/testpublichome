@@ -29,7 +29,7 @@ export const FORM_PAGES: Record<JourneyKey, FormPageVariant> = {
   buyer: {
     heading: "Become an AI Buyer",
     subheading: "Find AI solutions",
-    filloutId: null,
+    filloutId: "rGkmoBAXUaus",
     metaTitle: "Become an AI Buyer | JazzHQ",
   },
 };
