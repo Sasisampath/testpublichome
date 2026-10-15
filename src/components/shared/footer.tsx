@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
-import { AI_SUMMARY_LINKS, FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
+import { FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
 import { NavItem } from "@/components/ui/nav-item";
+import { FooterAI } from "./footer-ai";
 import { FooterTip } from "./footer-tip";
 import { FooterWordmark } from "./footer-wordmark";
 import "./footer.css";
@@ -83,16 +84,7 @@ export function Footer() {
 
             <div className="site-footer__ai">
               <p className="site-footer__title">Summarize with AI what JazzHQ does:</p>
-              <div className="site-footer__ai-logos">
-                {AI_SUMMARY_LINKS.map((item, index) => (
-                  <FooterTip key={item.label} align={index === 0 ? "start" : index === AI_SUMMARY_LINKS.length - 1 ? "end" : "center"} tip={`Ask ${item.label}`}>
-                    <NavItem href={item.href} className="site-footer__ai-logo" ariaLabel={`Ask ${item.label}`}>
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={item.logo} alt="" width={30} height={30} loading="lazy" />
-                    </NavItem>
-                  </FooterTip>
-                ))}
-              </div>
+              <FooterAI />
             </div>
           </div>
 

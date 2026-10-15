@@ -70,3 +70,18 @@
   .site-footer__nav { gap: 48px; }
   .site-footer__bottom { flex-direction: column; align-items: flex-start; }
 }
+
+/* "Summarize with AI" confirmation toast (fixed, never affects layout). */
+.site-ai-toast { position: fixed; left: 50%; bottom: 24px; z-index: 100; width: max-content; max-width: calc(100vw - 32px); padding: 12px 18px; border: 1px solid rgb(255 255 255 / .14); border-radius: 12px; background: #151515; box-shadow: 0 12px 32px rgb(0 0 0 / .35); color: #fff; font-size: 14px; font-weight: 500; line-height: 1.4; text-align: center; opacity: 0; visibility: hidden; transform: translate(-50%, 8px); transition: opacity .2s ease, transform .2s ease, visibility .2s; pointer-events: none; }
+.site-ai-toast.is-visible { opacity: 1; visibility: visible; transform: translate(-50%, 0); }
+/* Shown only if the clipboard copy fails. */
+.site-ai-fallback { position: fixed; left: 50%; bottom: 24px; z-index: 101; display: grid; gap: 12px; width: min(420px, calc(100vw - 32px)); padding: 16px; border: 1px solid rgb(255 255 255 / .14); border-radius: 14px; background: #151515; box-shadow: 0 16px 40px rgb(0 0 0 / .45); color: #fff; transform: translateX(-50%); }
+.site-ai-fallback__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.site-ai-fallback__title { font-size: 15px; font-weight: 600; }
+.site-ai-fallback__close { width: 28px; height: 28px; border-radius: 8px; font-size: 20px; line-height: 1; color: rgb(255 255 255 / .72); cursor: pointer; }
+.site-ai-fallback__close:hover { color: #fff; background: rgb(255 255 255 / .06); }
+.site-ai-fallback__text { width: 100%; height: 120px; padding: 10px; border: 1px solid rgb(255 255 255 / .14); border-radius: 10px; background: #0a090b; color: rgb(255 255 255 / .82); font: inherit; font-size: 12px; line-height: 1.5; resize: none; }
+.site-ai-fallback__actions { display: flex; gap: 10px; }
+.site-ai-fallback__btn { flex: 1; min-height: 40px; padding: 8px 14px; border: 1px solid rgb(255 255 255 / .22); border-radius: 10px; font-size: 14px; font-weight: 500; color: #fff; cursor: pointer; }
+.site-ai-fallback__btn--primary { border-color: #fff; background: #fff; color: #0a090b; }
+@media (prefers-reduced-motion: reduce) { .site-ai-toast { transition: none; } }
