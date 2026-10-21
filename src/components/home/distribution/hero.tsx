@@ -1,14 +1,11 @@
 "use client";
 import { useState } from "react";
 import { AUDIENCES, AUDIENCE_ORDER, type Audience } from "./audiences";
-import { VinylScene } from "./vinyl-scene";
 import { NavItem } from "@/components/ui/nav-item";
 import { VinylIcon } from "@/components/ui/vinyl-icon";
 
 export function DistributionHero() {
-  // The turntable starts with no record; the selector and copy default to Buyer.
-  const [audience, setAudience] = useState<Audience | null>(null);
-  const shown = audience ?? "buyer";
+  const [shown, setAudience] = useState<Audience>("buyer");
   const active = AUDIENCES[shown];
   return <section className={`dh-hero dh-container dh-accent--${shown}`} aria-labelledby="distribution-title">
     <div className="dh-hero-top">
@@ -16,7 +13,6 @@ export function DistributionHero() {
         <h1 id="distribution-title">Full-stack AI Distribution Platform</h1>
         <p className="dh-hero-description">JazzHQ connects companies looking for AI with the vendors building it and the trusted partners who can sell, implement and support it.</p>
       </div>
-      <VinylScene audience={audience} />
     </div>
     <div className="dh-records" aria-label="Choose your audience">
       {AUDIENCE_ORDER.map(key => {
