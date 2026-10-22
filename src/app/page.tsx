@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { GridBackground } from "@/components/layout/grid-background";
-import { TopBanner } from "@/components/layout/top-banner";
 import { Header } from "@/components/layout/header";
 import Footer from "@/components/shared/footer";
 import { TrustedByStrip } from "@/components/home/trusted-by-strip";
@@ -21,7 +20,6 @@ export const metadata: Metadata = pageSeo({
 
 export default function HomePage() {
   return <GridBackground>
-    <TopBanner />
     <Header />
     <main className={`dh-home flex-1${IS_FIGMA_EXPORT ? " dh-figma-export" : ""}`}>
       <DistributionHero />
