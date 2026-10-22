@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import { AUDIENCES, AUDIENCE_ORDER, type Audience } from "./audiences";
+import { HeroHeadline } from "./hero-headline";
 import { NavItem } from "@/components/ui/nav-item";
 import { VinylIcon } from "@/components/ui/vinyl-icon";
 
@@ -10,7 +11,7 @@ export function DistributionHero() {
   return <section className={`dh-hero dh-container dh-accent--${shown}`} aria-labelledby="distribution-title">
     <div className="dh-hero-top">
       <div className="dh-hero-intro">
-        <h1 id="distribution-title">Full-stack AI Distribution Platform</h1>
+        <HeroHeadline />
       </div>
     </div>
     <div className="dh-records" aria-label="Choose your audience">

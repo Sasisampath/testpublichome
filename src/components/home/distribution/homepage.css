@@ -26,9 +26,39 @@
 
 /* ── Hero ─────────────────────────────────────────────────────── */
 .dh-hero { position: relative; isolation: isolate; padding-top: clamp(28px, 3.6vw, 52px); padding-bottom: 32px; transition: --dh-accent .4s ease; }
-/* Headline-only hero on the neutral page grid (no role tint). */
+/* Headline-only hero on the neutral page grid (no role tint), centred:
+   "Full-stack AI / [word] Platform". Only the word changes; it sits in a slot
+   as wide as its widest translation, so "Platform" never moves. */
 .dh-hero-top { padding-block: clamp(16px, 2.5vw, 36px); }
-.dh-hero h1 { max-width: 900px; text-wrap: balance; font-family: var(--font-display); font-size: var(--fs-display); font-weight: 700; line-height: var(--lh-display); letter-spacing: var(--ls-display); color: var(--dh-ink); }
+.dh-hero h1 { text-align: center; font-family: var(--font-display); font-size: var(--fs-display); font-weight: 700; line-height: var(--lh-display); letter-spacing: var(--ls-display); color: var(--dh-ink); }
+.dh-hero-title__visual { position: relative; display: block; }
+.dh-hero-title__line { display: block; }
+.dh-hero-title__line--word { display: flex; justify-content: center; align-items: flex-start; column-gap: .26em; }
+.dh-word-slot { --word-align: right; position: relative; flex-shrink: 0; width: var(--slot-w, 5.4em); height: calc(var(--lh-display) * 1em); color: var(--dh-accent); }
+.dh-word, .dh-px__ink { position: absolute; white-space: nowrap; text-align: var(--word-align); }
+.dh-word { inset: 0; }
+.dh-word.is-morphing { visibility: hidden; }
+.dh-word-measure { position: absolute; top: 0; left: 0; visibility: hidden; pointer-events: none; white-space: nowrap; }
+.dh-word-measure > span { display: block; width: max-content; }
+/* Scripts Plus Jakarta Sans lacks: bold system faces, then Noto, with matching weight. */
+.dh-hero-title :lang(hi) { font-family: "Kohinoor Devanagari", "Noto Sans Devanagari", "Nirmala UI", var(--font-display); }
+.dh-hero-title :lang(ta) { font-family: "Tamil Sangam MN", "Noto Sans Tamil", "Nirmala UI", "Latha", var(--font-display); }
+.dh-hero-title :lang(zh-Hans) { font-family: "PingFang SC", "Noto Sans SC", "Microsoft YaHei", var(--font-display); letter-spacing: 0; }
+.dh-hero-title :lang(ar) { font-family: "Geeza Pro", "Noto Sans Arabic", "Segoe UI", var(--font-display); letter-spacing: 0; }
+
+/* Pixel morph (~460ms): the slot is tiled with small square cells, each
+   showing a magnified centre of the word (one solid "pixel"). JS steps three
+   shared values: --z (pixel coarseness), --k (whole-pixel shifts) and --drop
+   (missing pixels); half-way the cells swap to the next word and step back
+   to sharp text. No per-cell animations, colour effects, blur or noise. */
+.dh-word-px { --z: 1; --k: 0; --drop: 0; position: absolute; inset: 0; pointer-events: none; }
+.dh-px { position: absolute; overflow: hidden; transform: translate(calc(var(--dx) * var(--k)), calc(var(--dy) * var(--k))); opacity: min(clamp(0, (var(--r) - var(--drop)) * 1000, 1), calc(1 - (1 - var(--a)) * var(--k) / 2)); }
+.dh-px__ink { left: var(--ix); top: var(--iy); transform-origin: var(--ox) var(--oy); transform: scale(var(--z)); }
+.dh-word-px:not(.is-in) .dh-px__ink--in, .dh-word-px.is-in .dh-px__ink--out { visibility: hidden; }
+@media (prefers-reduced-motion: reduce) {
+  .dh-word-px { display: none; }
+  .dh-word.is-morphing { visibility: visible; }
+}
 
 
 .dh-records { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 2.8vw, 40px); margin-top: 40px; }
@@ -210,6 +240,9 @@
 @media (max-width: 767px) {
   .dh-hero { padding-top: 28px; }
   .dh-hero h1 { font-size: clamp(32px, 9vw, 44px); }
+  /* Three intentional centred lines: Full-stack AI / [word] / Platform. */
+  .dh-hero-title__line--word { flex-direction: column; align-items: center; }
+  .dh-word-slot { --word-align: center; }
   .dh-records { gap: 6px; margin-top: 20px; }
   .dh-record { flex-direction: column; justify-content: center; gap: 10px; min-height: 112px; padding: 12px 6px; border-radius: 12px 12px 0 0; text-align: center; }
   .dh-record-name { font-size: 13px; line-height: 1.35; }
