@@ -26,15 +26,9 @@
 
 /* ── Hero ─────────────────────────────────────────────────────── */
 .dh-hero { position: relative; isolation: isolate; padding-top: clamp(28px, 3.6vw, 52px); padding-bottom: 32px; transition: --dh-accent .4s ease; }
-/* Soft audience-coloured wash over the grid, strongest at the top right. */
-.dh-hero::before { content: ""; position: absolute; z-index: -1; inset: 0 calc(50% - 50vw); background: radial-gradient(54% 80% at 76% 24%, color-mix(in srgb, var(--dh-accent) 10%, transparent), transparent 72%); pointer-events: none; }
-/* Copy-only hero, editorial split on the page grid: headline (~60%) left,
-   supporting copy aligned to its last line on the right. Stacks below 1024px. */
+/* Headline-only hero on the neutral page grid (no role tint). */
 .dh-hero-top { padding-block: clamp(16px, 2.5vw, 36px); }
-.dh-hero-intro { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); column-gap: clamp(32px, 4.4vw, 72px); align-items: end; }
-.dh-hero-intro .dh-hero-description { max-width: none; margin-top: 0; padding-bottom: .55em; text-wrap: pretty; }
 .dh-hero h1 { max-width: 900px; text-wrap: balance; font-family: var(--font-display); font-size: var(--fs-display); font-weight: 700; line-height: var(--lh-display); letter-spacing: var(--ls-display); color: var(--dh-ink); }
-.dh-hero-description { max-width: 870px; margin-top: 20px; font-size: var(--fs-body-lg); line-height: var(--lh-body-lg); letter-spacing: -.015em; color: var(--dh-ink); }
 
 
 .dh-records { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(10px, 2.8vw, 40px); margin-top: 40px; }
@@ -211,13 +205,10 @@
   .dh-trust__badge { width: 64px; height: 64px; }
 }
 @media (max-width: 1023px) {
-  .dh-hero-intro { display: block; max-width: 88%; }
-  .dh-hero-intro .dh-hero-description { max-width: 870px; margin-top: 20px; padding-bottom: 0; }
   .dh-trust__list { grid-template-columns: minmax(0, 1fr); max-width: 560px; margin-inline: auto; }
 }
 @media (max-width: 767px) {
   .dh-hero { padding-top: 28px; }
-  .dh-hero-intro { max-width: none; }
   .dh-hero h1 { font-size: clamp(32px, 9vw, 44px); }
   .dh-records { gap: 6px; margin-top: 20px; }
   .dh-record { flex-direction: column; justify-content: center; gap: 10px; min-height: 112px; padding: 12px 6px; border-radius: 12px 12px 0 0; text-align: center; }

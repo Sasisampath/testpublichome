@@ -11,7 +11,6 @@ export function DistributionHero() {
     <div className="dh-hero-top">
       <div className="dh-hero-intro">
         <h1 id="distribution-title">Full-stack AI Distribution Platform</h1>
-        <p className="dh-hero-description">JazzHQ connects companies looking for AI with the vendors building it and the trusted partners who can sell, implement and support it.</p>
       </div>
     </div>
     <div className="dh-records" aria-label="Choose your audience">
