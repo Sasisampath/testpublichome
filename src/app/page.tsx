@@ -5,6 +5,7 @@ import Footer from "@/components/shared/footer";
 import { TrustedByStrip } from "@/components/home/trusted-by-strip";
 import { DistributionHero } from "@/components/home/distribution/hero";
 import { MarketplaceTabs } from "@/components/home/marketplace-tabs";
+import { RehearseSection } from "@/components/home/rehearse-section";
 import { JazzClubClose } from "@/components/home/distribution/jazzclub-section";
 import { CustomerProof } from "@/components/home/customer-proof";
 import { DataResponsibilitySection } from "@/components/home/data-responsibility-section";
@@ -25,6 +26,7 @@ export default function HomePage() {
       <DistributionHero />
       <TrustedByStrip />
       <MarketplaceTabs />
+      <RehearseSection />
       <DataResponsibilitySection />
       <CustomerProof />
       <JazzClubClose />
