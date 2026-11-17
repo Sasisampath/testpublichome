@@ -33,20 +33,52 @@
 .site-footer__legal .site-footer__link { font-size: 14px; }
 .site-footer__legal .site-footer__link + .site-footer__link { margin-left: 20px; padding-left: 20px; border-left: 1px solid rgb(255 255 255 / .25); }
 
-/* Full logo, never cropped; only a 12px safe gap below it. */
+/* Full logo, never cropped; only a 12px safe gap below it. Drawn inline from
+   the logo's own paths (footer-wordmark-shapes.ts), same box as the old <img>. */
 .site-footer__wordmark-reveal { position: relative; width: 80%; margin: clamp(48px, 6.4vw, 92px) auto 0; padding-bottom: 12px; }
-.site-footer__wordmark { display: block; width: 100%; height: auto; }
-.site-footer__wordmark--reveal { position: absolute; inset: 0 0 12px; }
-/* Scroll reveal (JS adds .is-scroll-reveal; reduced motion keeps the plain bright logo). */
+.site-footer__wordmark { display: block; width: 100%; height: auto; aspect-ratio: 382 / 63.5; overflow: visible; }
+.site-footer__wordmark--reveal, .site-footer__wordmark--glow { position: absolute; inset: 0 0 12px; }
+/* Letters: dark fill close to the footer background + a faint 1px outline. */
+.site-wordmark__letter { fill: color-mix(in srgb, var(--footer-bg) 93%, #fff); stroke: rgb(255 255 255 / .16); stroke-width: 1px; vector-effect: non-scaling-stroke; }
+/* Scroll reveal (JS adds .is-scroll-reveal; reduced motion keeps the plain logo). */
 .site-footer__wordmark-reveal.is-scroll-reveal { --reveal: -32%; }
-/* Unrevealed state: dark monochrome, Q included; colour only comes from the top layer. */
-.is-scroll-reveal .site-footer__wordmark--base { opacity: .16; filter: grayscale(1) brightness(.6); }
-/* Broad, soft blend (~32%): white → near-white → grey → charcoal → dark. */
+/* Unrevealed state: faint monochrome, Q included; outline and ring colour come from the top layer. */
+.is-scroll-reveal .site-footer__wordmark--base { opacity: .1; filter: grayscale(1) brightness(.6); }
+/* Broad, soft blend (~32%) bottom → top. */
 .is-scroll-reveal .site-footer__wordmark--reveal {
   -webkit-mask-image: linear-gradient(to top, #000 0%, #000 var(--reveal), rgb(0 0 0 / .6) calc(var(--reveal) + 7%), rgb(0 0 0 / .26) calc(var(--reveal) + 16%), rgb(0 0 0 / .07) calc(var(--reveal) + 25%), transparent calc(var(--reveal) + 32%), transparent 100%);
   mask-image: linear-gradient(to top, #000 0%, #000 var(--reveal), rgb(0 0 0 / .6) calc(var(--reveal) + 7%), rgb(0 0 0 / .26) calc(var(--reveal) + 16%), rgb(0 0 0 / .07) calc(var(--reveal) + 25%), transparent calc(var(--reveal) + 32%), transparent 100%);
 }
 .site-footer__wordmark-reveal:not(.is-scroll-reveal) .site-footer__wordmark--base { visibility: hidden; }
+
+/* ── Hover glow + decorative cursors (fine pointers only; JS adds .is-interactive) ── */
+.site-footer__wordmark-reveal.is-interactive { --x: 50%; --y: 50%; --glow-r: clamp(90px, 13vw, 200px); cursor: none; }
+/* Brighter letters, clipped to the logo shape (SVG clipPath) and limited to a soft
+   spotlight around the pointer; intersected with the scroll-reveal mask. */
+.site-footer__wordmark--glow { opacity: 0; transition: opacity .25s ease; pointer-events: none;
+  -webkit-mask-image: radial-gradient(circle var(--glow-r) at var(--x) var(--y), #000 0%, rgb(0 0 0 / .55) 32%, rgb(0 0 0 / .18) 62%, transparent 100%), linear-gradient(to top, #000 0%, #000 var(--reveal, 100%), transparent calc(var(--reveal, 100%) + 32%));
+  -webkit-mask-composite: source-in;
+  mask-image: radial-gradient(circle var(--glow-r) at var(--x) var(--y), #000 0%, rgb(0 0 0 / .55) 32%, rgb(0 0 0 / .18) 62%, transparent 100%), linear-gradient(to top, #000 0%, #000 var(--reveal, 100%), transparent calc(var(--reveal, 100%) + 32%));
+  mask-composite: intersect;
+}
+.site-footer__wordmark--glow .site-wordmark__letter { fill: color-mix(in srgb, var(--footer-bg) 86%, #fff); stroke: rgb(255 255 255 / .42); stroke-width: 3px; }
+.is-hovering .site-footer__wordmark--glow { opacity: 1; }
+
+/* Cursor layer: decorative, never blocks clicks, never focusable. */
+.site-wordmark-cursors { position: absolute; inset: 0; pointer-events: none; }
+.site-wordmark-bot, .site-wordmark-you { position: absolute; top: 0; left: 0; will-change: transform; }
+.site-wordmark-you { opacity: 0; }
+.is-hovering .site-wordmark-you { opacity: 1; }
+.site-wordmark-cursor { --tone: #fff; position: relative; }
+.site-wordmark-cursor__arrow { position: absolute; top: 0; left: 0; display: block; fill: var(--tone); stroke: rgb(10 9 11 / .55); stroke-width: 1; stroke-linejoin: round; filter: drop-shadow(0 1px 2px rgb(0 0 0 / .45)); }
+.site-wordmark-cursor__label { position: absolute; top: 13px; left: 13px; padding: 3px 9px; border: 1px solid color-mix(in srgb, var(--tone) 45%, transparent); border-radius: 999px; background: color-mix(in srgb, var(--footer-bg) 86%, #fff); color: #fff; font-size: 12px; font-weight: 600; line-height: 1.4; white-space: nowrap; box-shadow: 0 2px 8px rgb(0 0 0 / .35); }
+.site-wordmark-cursor__label::before { content: attr(data-label); }
+.is-flipped .site-wordmark-cursor__label { right: -4px; left: auto; }
+.site-wordmark-bot--buyer .site-wordmark-cursor { --tone: var(--color-buyer); }
+.site-wordmark-bot--vendor .site-wordmark-cursor { --tone: var(--color-vendor); }
+.site-wordmark-bot--partner .site-wordmark-cursor { --tone: var(--color-partner); }
+.site-wordmark-bot--jazz .site-wordmark-cursor { --tone: #fff; }
+.site-wordmark-cursor--you .site-wordmark-cursor__label { border-color: transparent; background: #fff; color: var(--color-text-primary); }
 
 /* Footer tooltips: above the mark, never affect layout. */
 .site-tip { position: relative; display: inline-flex; }
