@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState, type FocusEvent, type KeyboardEvent, type PointerEvent, type ReactNode } from "react";
+import Image from "next/image";
 import { ArrowRight, ChevronLeft, ChevronRight, Clock, TrendingUp } from "lucide-react";
 import { REHEARSE_SCENARIOS, REHEARSE_URL, type RehearseScenario } from "@/data/rehearse-scenarios";
 import { Reveal } from "@/components/home/reveal";
@@ -11,8 +12,11 @@ const AUTOPLAY_MS = 3000;
 const SWIPE_PX = 45;
 const COUNT = REHEARSE_SCENARIOS.length;
 
-// Position of card `index` relative to the active card: -1 (left), 0, +1 (right).
+// Position of card `index` relative to the active card: -1 (left), 0, +1 (right);
+// any other card waits hidden behind the active one.
 const offsetOf = (index: number, active: number) => ((index - active + 1 + COUNT * 2) % COUNT) - 1;
+const POSITIONS: Record<number, string> = { [-1]: "prev", 0: "active", 1: "next" };
+const positionOf = (index: number, active: number) => POSITIONS[offsetOf(index, active)] ?? "hidden";
 
 // External RehearseHQ destination, or a same-looking button that does nothing
 // while the URL has not been supplied yet.
@@ -26,7 +30,7 @@ function RehearseLink({ href, className, children, tabIndex, onClick }: {
   return <button type="button" className={className} tabIndex={tabIndex} onClick={onClick}>{children}</button>;
 }
 
-function Banner({ src }: { src: string }) {
+function Banner({ src, alt, priority }: { src: string; alt: string; priority: boolean }) {
   const [failed, setFailed] = useState(false);
   const ref = useRef<HTMLImageElement>(null);
   // The file may already have failed before hydration; onError would not fire then.
@@ -35,22 +39,21 @@ function Banner({ src }: { src: string }) {
     if (img && img.complete && img.naturalWidth === 0) setFailed(true);
   }, []);
   return (
-    <div className="dh-rh-card__banner" aria-hidden="true">
+    <div className="dh-rh-card__banner">
       {!failed && (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img ref={ref} src={src} alt="" width={960} height={420} loading="lazy" decoding="async" draggable={false} onError={() => setFailed(true)} />
+        <Image ref={ref} src={src} alt={alt} fill sizes="(max-width: 767px) 92vw, 400px" priority={priority} draggable={false} onError={() => setFailed(true)} />
       )}
     </div>
   );
 }
 
-function ScenarioCard({ scenario, index, count, offset, jumping, active, onSelect }: {
-  scenario: RehearseScenario; index: number; count: number; offset: number; jumping: boolean; active: boolean; onSelect: () => void;
+function ScenarioCard({ scenario, index, count, position, jumping, active, onSelect }: {
+  scenario: RehearseScenario; index: number; count: number; position: string; jumping: boolean; active: boolean; onSelect: () => void;
 }) {
   return (
     <article
       className={`dh-rh-card${active ? " is-active" : ""}${jumping ? " is-jump" : ""}`}
-      style={{ "--o": offset } as React.CSSProperties}
+      data-pos={position}
       role="group"
       aria-roledescription="slide"
       aria-label={`${index + 1} of ${count}`}
@@ -62,7 +65,7 @@ function ScenarioCard({ scenario, index, count, offset, jumping, active, onSelec
         </ul>
         <span className="dh-rh-tag dh-rh-tag--level">{scenario.difficulty}</span>
       </div>
-      <Banner src={scenario.image} />
+      <Banner src={scenario.image} alt={scenario.imageAlt} priority={index === 0} />
       <h3 className="dh-rh-card__title">{scenario.title}</h3>
       <p className="dh-rh-card__desc">{scenario.description}</p>
       <div className="dh-rh-card__foot">
@@ -89,7 +92,7 @@ function ScenarioCard({ scenario, index, count, offset, jumping, active, onSelec
 
 export function RehearseSection() {
   const [active, setActive] = useState(0);
-  const [jump, setJump] = useState<number | null>(null);
+  const [jump, setJump] = useState<number[]>([]);
   const [hovered, setHovered] = useState(false);
   const [focused, setFocused] = useState(false);
   const [dragging, setDragging] = useState(false);
@@ -102,10 +105,9 @@ export function RehearseSection() {
   const goTo = useCallback((next: number) => {
     setActive((current) => {
       if (next === current) return current;
-      // With three cards, exactly one wraps the long way round; it re-enters from
-      // the far side (placed instantly, fading in) instead of sweeping across.
-      const wrapper = REHEARSE_SCENARIOS.findIndex((_, i) => Math.abs(offsetOf(i, next) - offsetOf(i, current)) === 2);
-      setJump(wrapper >= 0 ? wrapper : null);
+      // A card switching sides (left ↔ right) would sweep across the active one;
+      // it is placed instantly instead, then fades in.
+      setJump(REHEARSE_SCENARIOS.map((_, i) => i).filter((i) => offsetOf(i, next) * offsetOf(i, current) === -1));
       return next;
     });
   }, []);
@@ -120,9 +122,9 @@ export function RehearseSection() {
   }, [active]);
 
   useEffect(() => {
-    if (jump === null) return;
+    if (!jump.length) return;
     let second = 0;
-    const first = requestAnimationFrame(() => { second = requestAnimationFrame(() => setJump(null)); });
+    const first = requestAnimationFrame(() => { second = requestAnimationFrame(() => setJump([])); });
     return () => { cancelAnimationFrame(first); cancelAnimationFrame(second); };
   }, [jump]);
 
@@ -211,8 +213,8 @@ export function RehearseSection() {
                 scenario={scenario}
                 index={index}
                 count={COUNT}
-                offset={offsetOf(index, active)}
-                jumping={jump === index}
+                position={positionOf(index, active)}
+                jumping={jump.includes(index)}
                 active={index === active}
                 onSelect={() => goTo(index)}
               />
@@ -227,7 +229,7 @@ export function RehearseSection() {
                   key={scenario.id}
                   type="button"
                   className={`dh-rh-dot${index === active ? " is-active" : ""}`}
-                  aria-label={`Scenario ${index + 1} of ${COUNT}`}
+                  aria-label={`Go to scenario ${index + 1}`}
                   aria-current={index === active ? "true" : undefined}
                   onClick={() => goTo(index)}
                 />

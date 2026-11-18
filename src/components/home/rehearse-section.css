@@ -8,19 +8,28 @@
 .dh-rehearse__cta { margin-top: 32px; }
 
 /* ── Carousel ───────────────────────────────────────────────────── */
-.dh-rehearse__carousel { --card-w: 400px; --card-gap: 16px; min-width: 0; }
-.dh-rh-viewport { display: grid; justify-items: center; overflow: hidden; padding-block: 8px; touch-action: pan-y; user-select: none; }
+/* A contained deck: the active card in front, its neighbours peeking out
+   --peek px on each side, all inside the column (nothing is clipped). */
+.dh-rehearse__carousel { --card-w: 400px; --peek: 28px; min-width: 0; }
+.dh-rh-viewport { display: grid; justify-items: center; padding-block: 8px; touch-action: pan-y; user-select: none; }
 
-/* All cards share one grid cell; --o (-1, 0, 1) places each relative to the active one. */
+/* All cards share one grid cell; data-pos (prev / active / next / hidden) places each. */
 .dh-rh-card {
-  grid-area: 1 / 1; position: relative; display: flex; flex-direction: column; width: var(--card-w); min-width: 0; padding: 20px 20px 18px;
-  border: 1px solid var(--dh-line); border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(28 19 48 / .02);
-  transform: translateX(calc(var(--o) * (var(--card-w) + var(--card-gap)))) scale(calc(1 - var(--o) * var(--o) * .1));
-  opacity: calc(1 - var(--o) * var(--o) * .45); z-index: calc(2 - var(--o) * var(--o));
-  transition: transform .52s cubic-bezier(.4, 0, .2, 1), opacity .52s cubic-bezier(.4, 0, .2, 1);
+  --shift: 0px; --scale: 1;
+  grid-area: 1 / 1; position: relative; display: flex; flex-direction: column; width: min(var(--card-w), calc(100% - 2 * var(--peek))); min-width: 0; padding: 20px 20px 18px;
+  border: 1px solid var(--dh-line); border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(28 19 48 / .04);
+  transform: translateX(var(--shift)) scale(var(--scale));
+  transition: transform .36s cubic-bezier(.4, 0, .2, 1), opacity .36s cubic-bezier(.4, 0, .2, 1), background-color .36s;
 }
-.dh-rh-card:not(.is-active) { cursor: pointer; }
-/* The card that re-enters from the far side appears in place, then fades in. */
+.dh-rh-card > * { transition: opacity .2s; }
+.dh-rh-card[data-pos="active"] { z-index: 3; }
+/* Neighbours: slightly smaller, dimmed and blank, so only their edges show. */
+.dh-rh-card:is([data-pos="prev"], [data-pos="next"]) { --scale: .92; z-index: 2; background: color-mix(in srgb, var(--dh-ink) 3%, #fff); cursor: pointer; }
+.dh-rh-card[data-pos="prev"] { --shift: calc(-1 * (var(--peek) + 4%)); }
+.dh-rh-card[data-pos="next"] { --shift: calc(var(--peek) + 4%); }
+.dh-rh-card:not([data-pos="active"]) > * { opacity: 0; }
+.dh-rh-card[data-pos="hidden"] { --scale: .84; z-index: 1; opacity: 0; pointer-events: none; }
+/* A card switching sides appears in place, then fades in. */
 .dh-rh-card.is-jump { opacity: 0; transition: none; }
 
 .dh-rh-card__tags { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
@@ -28,8 +37,8 @@
 .dh-rh-tag { padding: 5px 10px; border-radius: 999px; background: color-mix(in srgb, var(--dh-ink) 6%, #fff); font-size: 11px; font-weight: 600; line-height: 1.2; letter-spacing: .02em; text-transform: uppercase; white-space: nowrap; color: var(--dh-ink); }
 .dh-rh-tag--level { flex-shrink: 0; border: 1px solid var(--dh-line); background: #fff; color: var(--dh-muted); }
 
-.dh-rh-card__banner { aspect-ratio: 16 / 7; margin-top: 14px; overflow: hidden; border-radius: 12px; background: color-mix(in srgb, var(--dh-ink) 5%, #fff); }
-.dh-rh-card__banner img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.dh-rh-card__banner { position: relative; aspect-ratio: 16 / 7; margin-top: 14px; overflow: hidden; border-radius: 12px; background: color-mix(in srgb, var(--dh-ink) 5%, #fff); }
+.dh-rh-card__banner img { object-fit: cover; }
 
 .dh-rh-card__title { margin-top: 18px; font-family: var(--font-display); font-size: 22px; font-weight: 700; line-height: 1.25; letter-spacing: -.02em; color: var(--dh-ink); text-wrap: balance; }
 .dh-rh-card__desc { margin-top: 8px; font-size: var(--fs-small); line-height: 1.55; color: var(--dh-muted); }
@@ -59,22 +68,20 @@
 
 /* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 1279px) {
-  .dh-rehearse__carousel { --card-w: 360px; }
+  .dh-rehearse__carousel { --card-w: 380px; --peek: 22px; }
+  .dh-rh-card { padding: 18px 18px 16px; }
   .dh-rh-card__title { font-size: 20px; }
+  .dh-rh-card__foot { flex-wrap: wrap; }
 }
-@media (max-width: 1023px) {
+@media (max-width: 767px) {
   .dh-rehearse__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .dh-rehearse__copy { text-align: center; }
   .dh-rehearse__copy h2, .dh-rehearse__copy p { margin-inline: auto; }
-  .dh-rehearse__carousel { --card-w: 400px; }
-}
-@media (max-width: 639px) {
-  .dh-rehearse__carousel { --card-w: min(100%, 400px); }
-  /* One fully readable card at a time on small screens. */
-  .dh-rh-card:not(.is-active) { opacity: 0; pointer-events: none; }
-  .dh-rh-card { padding: 16px 16px 16px; }
-  .dh-rh-card__foot { flex-wrap: wrap; }
+  /* One full-width card at a time. */
+  .dh-rehearse__carousel { --card-w: 100%; --peek: 0px; }
+  .dh-rh-card:not([data-pos="active"]) { opacity: 0; pointer-events: none; }
+  .dh-rh-card { padding: 16px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dh-rh-card, .dh-rh-dot::before, .dh-rh-start svg { transition: none; }
+  .dh-rh-card, .dh-rh-card > *, .dh-rh-dot::before, .dh-rh-start svg { transition: none; }
 }
