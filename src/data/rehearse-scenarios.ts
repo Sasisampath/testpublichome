@@ -47,7 +47,7 @@ export const REHEARSE_SCENARIOS: RehearseScenario[] = [
     duration: "6 min",
     winRate: "34% win rate",
     image: "/images/hero/hero-scenario-2.webp",
-    imageAlt: "A vendor explains his solution to a buyer beside a sales dashboard",
+    imageAlt: "An AI vendor answers a buyer’s questions about her solution in a meeting",
     roleplayUrl: null,
   },
   {
@@ -59,7 +59,7 @@ export const REHEARSE_SCENARIOS: RehearseScenario[] = [
     duration: "5 min",
     winRate: "28% win rate",
     image: "/images/hero/hero-scenario-3.webp",
-    imageAlt: "A partnerships lead pitches revenue growth to a channel partner",
+    imageAlt: "A partnerships lead walks a channel partner through a revenue growth dashboard",
     roleplayUrl: null,
   },
   {
@@ -71,7 +71,7 @@ export const REHEARSE_SCENARIOS: RehearseScenario[] = [
     duration: "7 min",
     winRate: "12% win rate",
     image: "/images/hero/hero-scenario-4.webp",
-    imageAlt: "A frustrated customer raises concerns in a meeting",
+    imageAlt: "A business leader makes his case across the table, beside a growth arrow and handshake",
     roleplayUrl: null,
   },
 ];

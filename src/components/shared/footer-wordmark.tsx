@@ -7,12 +7,40 @@ import { WORDMARK_SHAPES, WORDMARK_VIEWBOX, type WordmarkShape } from "./footer-
 //  - Base layer: the old dim monochrome logo (unrevealed state).
 //  - Logo layer: dark letters with a faint outline; the Q's rings keep their colours.
 //    Revealed bottom → top by a soft mask as the wordmark scrolls into view.
-//  - Fine pointers only (hover + fine pointer, no reduced motion): a glow layer
-//    (brighter letters, clipped to the logo and masked by a radial gradient that
-//    follows the mouse) plus a decorative cursor layer ("You" + four pointers).
+//  - Equalizer: the logo is an instrument of seven keys (J A Z Z · H Q). When the
+//    visitor's pointer enters a key, violet LED bars pulse inside that letter and
+//    its neighbours give a smaller, delayed green echo; Q pulses its rings instead.
+//    A tap plays one short J → Q ripple. Reduced motion: a static highlight.
+//    Silent. Only the visitor's input plays a beat; the floating cursors never do.
+//  - Fine pointers only (hover + fine pointer, no reduced motion): a decorative
+//    cursor layer ("you" + four pointers) drawn above the equalizer.
 // Nothing in here is focusable or announced; the container stays aria-hidden.
 
-type Variant = "base" | "logo" | "glow";
+type Variant = "base" | "logo";
+
+/** Keys left to right: vertical bands of the viewBox (they tile its full width)
+ *  and the index of each key's shape in WORDMARK_SHAPES. */
+const KEYS = [
+  { name: "J", left: 0, right: 52, shape: 7 },
+  { name: "A", left: 52, right: 115, shape: 8 },
+  { name: "Z1", left: 115, right: 166, shape: 9 },
+  { name: "Z2", left: 166, right: 228, shape: 10 },
+  { name: "dot", left: 228, right: 254, shape: 4 },
+  { name: "H", left: 254, right: 319, shape: 1 },
+  { name: "Q", left: 319, right: 382, shape: 6 },
+] as const;
+const Q_INDEX = KEYS.length - 1;
+const Q_DISC = 0; // the Q's inner disc, drawn with its rings ("speaker")
+const VIEW_W = 382;
+
+// LED column heights (viewBox units), reused in a staggered order per key.
+const LEVELS = [36, 45, 49, 39, 55, 46, 51, 37, 43, 54, 47, 41];
+const LED = { hit: "#9484ff", echo: "#45d89c" } as const;
+
+const BEAT_MS = 850; // a beat settles after this
+const RIPPLE_STAGGER = 60;
+const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
+const TOUCH = "(hover: none), (pointer: coarse)";
 
 function Shape({ shape, variant }: { shape: WordmarkShape; variant: Variant }) {
   const isRing = shape.kind === "ring";
@@ -29,28 +57,71 @@ function Shape({ shape, variant }: { shape: WordmarkShape; variant: Variant }) {
   return <circle cx={shape.cx} cy={shape.cy} r={shape.r} {...paint} />;
 }
 
-function WordmarkSvg({ variant, className, clipId }: { variant: Variant; className: string; clipId?: string }) {
-  const letters = WORDMARK_SHAPES.filter((shape) => shape.kind === "letter");
+/** Bare geometry (for clip paths). */
+function Geometry({ shape }: { shape: WordmarkShape }) {
+  if (shape.tag === "path") return <path d={shape.d} />;
+  if (shape.tag === "polygon") return <polygon points={shape.points} />;
+  return <circle cx={shape.cx} cy={shape.cy} r={shape.r} />;
+}
+
+/** LED columns for one key, clipped to its letter. Hidden until the key plays. */
+function Meter({ index, tone, uid }: { index: number; tone: "hit" | "echo"; uid: string }) {
+  const { left, right } = KEYS[index];
+  return (
+    <g className={`mark-meter mark-meter--${tone}`} clipPath={`url(#${uid}-clip-${index})`}>
+      {Array.from({ length: Math.ceil((right - left) / 4) + 1 }, (_, i) => {
+        const height = LEVELS[(i + index * 3) % LEVELS.length];
+        return (
+          <rect
+            key={i}
+            className="mark-column"
+            x={Math.floor(left / 4) * 4 + i * 4}
+            y={56 - height}
+            width="4"
+            height={height}
+            fill={`url(#${uid}-led-${tone})`}
+            style={{ animationDelay: `${(tone === "echo" ? 75 : 0) + (i % 4) * 12}ms` }}
+          />
+        );
+      })}
+    </g>
+  );
+}
+
+function WordmarkSvg({ variant, className, uid }: { variant: Variant; className: string; uid: string }) {
+  const rings = WORDMARK_SHAPES.filter((shape) => shape.kind === "ring");
   return (
     <svg className={`site-footer__wordmark ${className}`} viewBox={WORDMARK_VIEWBOX} focusable="false" aria-hidden="true">
-      {variant === "glow" && clipId ? (
-        <>
-          <defs>
-            <clipPath id={clipId}>
-              {letters.map((shape, i) => <Shape key={i} shape={shape} variant="base" />)}
-            </clipPath>
-          </defs>
-          {/* Clipped to the letters: brighter fill + an inner edge glow, so the
-              footer around the logo stays dark. Rings are redrawn on top in
-              their own colours so the glow never tints them. */}
-          <g clipPath={`url(#${clipId})`}>
-            {WORDMARK_SHAPES.map((shape, i) => shape.kind === "letter" && <Shape key={i} shape={shape} variant="glow" />)}
-          </g>
-          {WORDMARK_SHAPES.map((shape, i) => shape.kind === "ring" && <Shape key={`r${i}`} shape={shape} variant="glow" />)}
-        </>
-      ) : (
-        WORDMARK_SHAPES.map((shape, i) => <Shape key={i} shape={shape} variant={variant} />)
+      {variant === "logo" && (
+        <defs>
+          {KEYS.map(({ shape }, i) => (
+            <clipPath key={i} id={`${uid}-clip-${i}`}><Geometry shape={WORDMARK_SHAPES[shape]} /></clipPath>
+          ))}
+          {(Object.keys(LED) as (keyof typeof LED)[]).map((tone) => (
+            <pattern key={tone} id={`${uid}-led-${tone}`} width="4" height="2.5" patternUnits="userSpaceOnUse">
+              <rect width="3.45" height="1.95" rx=".3" fill={LED[tone]} />
+            </pattern>
+          ))}
+        </defs>
       )}
+      {KEYS.map(({ name, shape }, i) => (
+        <g key={name} className="mark-key" data-key={i}>
+          <Shape shape={WORDMARK_SHAPES[shape]} variant={variant} />
+          {i === Q_INDEX ? (
+            <g className="mark-speaker">
+              <Shape shape={WORDMARK_SHAPES[Q_DISC]} variant={variant} />
+              {rings.map((ring, r) => <Shape key={r} shape={ring} variant={variant} />)}
+            </g>
+          ) : (
+            variant === "logo" && (
+              <>
+                <Meter index={i} tone="hit" uid={uid} />
+                <Meter index={i} tone="echo" uid={uid} />
+              </>
+            )
+          )}
+        </g>
+      ))}
     </svg>
   );
 }
@@ -104,13 +175,12 @@ type BotState = {
 
 // Below 640px the logo is too small for four labelled pointers (noisy), so it stays static.
 const FINE_POINTER = "(hover: hover) and (pointer: fine) and (min-width: 640px)";
-const REDUCED_MOTION = "(prefers-reduced-motion: reduce)";
 
 export function FooterWordmark() {
   const ref = useRef<HTMLDivElement>(null);
   const youRef = useRef<HTMLDivElement>(null);
   const botRefs = useRef<(HTMLDivElement | null)[]>([]);
-  const clipId = `wordmark-clip-${useId().replace(/:/g, "")}`;
+  const uid = `wordmark-${useId().replace(/:/g, "")}`;
   // Changes only when the media queries change, never on pointer move or per frame.
   const [interactive, setInteractive] = useState(false);
 
@@ -141,6 +211,8 @@ export function FooterWordmark() {
       if (Math.abs(target - current) < 0.002) current = target;
       // Band starts fully below the logo (0) and has passed the top at 1.
       el.style.setProperty("--reveal", `${(current * (100 + BAND) - BAND).toFixed(2)}%`);
+      // Fully revealed: drop the mask so a lifted letter is never clipped.
+      el.classList.toggle("is-revealed", current >= 1);
       if (current !== target) frame = requestAnimationFrame(paint);
     };
     const onScroll = () => { measure(); if (!frame) frame = requestAnimationFrame(paint); };
@@ -159,14 +231,20 @@ export function FooterWordmark() {
   useEffect(() => {
     const fine = window.matchMedia(FINE_POINTER);
     const reduced = window.matchMedia(REDUCED_MOTION);
-    const sync = () => setInteractive(fine.matches && !reduced.matches);
+    // is-interactive is toggled on the element (not via the className prop) so a
+    // re-render never wipes the scroll-reveal classes the effect above adds.
+    const sync = () => {
+      const on = fine.matches && !reduced.matches;
+      setInteractive(on);
+      ref.current?.classList.toggle("is-interactive", on);
+    };
     sync();
     fine.addEventListener("change", sync);
     reduced.addEventListener("change", sync);
     return () => { fine.removeEventListener("change", sync); reduced.removeEventListener("change", sync); };
   }, []);
 
-  // Pointer tracking, glow and the decorative pointers. Refs + one rAF loop only.
+  // Pointer tracking and the decorative pointers. Refs + one rAF loop only.
   useEffect(() => {
     const el = ref.current;
     const you = youRef.current;
@@ -180,15 +258,13 @@ export function FooterWordmark() {
       for (const bot of bots) { bot.labelW = bot.label.offsetWidth; bot.labelH = bot.label.offsetHeight; }
     };
 
-    // ── "You" cursor + glow: written directly in the pointer handler (no lag, no state).
+    // ── "you" cursor: written directly in the pointer handler (no lag, no state).
     const hideYou = () => { el.classList.remove("is-hovering"); };
     const onMove = (event: PointerEvent) => {
       if (event.pointerType !== "mouse") return;
       const rect = el.getBoundingClientRect();
       const x = event.clientX - rect.left;
       const y = event.clientY - rect.top;
-      el.style.setProperty("--x", `${x.toFixed(1)}px`);
-      el.style.setProperty("--y", `${y.toFixed(1)}px`);
       you.style.transform = `translate3d(${x - 1.6}px, ${y - 1.6}px, 0)`;
       el.classList.add("is-hovering");
     };
@@ -279,20 +355,112 @@ export function FooterWordmark() {
     };
   }, [interactive]);
 
+  // Equalizer beats: only the visitor's own pointer or tap plays one (the floating
+  // cursors are decorative). Classes on the key groups through the DOM, no state.
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    const reduced = window.matchMedia(REDUCED_MOTION);
+    const touch = window.matchMedia(TOUCH);
+    const timers = new Set<number>();
+    const later = (fn: () => void, ms: number) => {
+      const id = window.setTimeout(() => { timers.delete(id); fn(); }, ms);
+      timers.add(id);
+      return id;
+    };
+    const cancel = (id: number) => { window.clearTimeout(id); timers.delete(id); };
+    let settle = 0;
+    let current = -1; // key under the visitor's pointer
+    let rippling = false;
+
+    const groups = (index: number) => el.querySelectorAll<SVGGElement>(`.mark-key[data-key="${index}"]`);
+    const clearAll = () => el.querySelectorAll(".mark-hit, .mark-echo").forEach((g) => g.classList.remove("mark-hit", "mark-echo"));
+    const add = (index: number, name: string) => groups(index).forEach((g) => g.classList.add(name));
+    // Removing then re-adding a class only restarts its CSS animations after a style flush.
+    const flush = () => void el.offsetWidth;
+
+    /** One beat on a key: violet bars in it, a smaller delayed green echo either side. */
+    const beat = (index: number, hold = false) => {
+      clearAll();
+      flush();
+      add(index, "mark-hit");
+      if (!reduced.matches) {
+        if (index > 0) add(index - 1, "mark-echo");
+        if (index < Q_INDEX) add(index + 1, "mark-echo");
+      }
+      cancel(settle);
+      // Reduced-motion hover keeps a static highlight while the pointer stays on the key.
+      if (!hold) settle = later(clearAll, BEAT_MS);
+    };
+
+    // Key under a point: the bands tile the logo's width (bottom 12px gap excluded).
+    const keyAt = (event: PointerEvent | MouseEvent) => {
+      const rect = el.getBoundingClientRect();
+      const y = event.clientY - rect.top;
+      if (!rect.width || y < 0 || y > rect.height - 12) return -1;
+      const x = ((event.clientX - rect.left) / rect.width) * VIEW_W;
+      return KEYS.findIndex(({ left, right }) => x >= left && x < right);
+    };
+
+    const onMove = (event: PointerEvent) => {
+      if (event.pointerType === "touch" || rippling) return;
+      const index = keyAt(event);
+      if (index === current) return; // holding still, or moving within a key: no new beat
+      current = index;
+      if (index >= 0) beat(index, reduced.matches);
+      else if (reduced.matches) clearAll();
+    };
+    const onLeave = () => {
+      current = -1;
+      if (reduced.matches) clearAll();
+    };
+
+    // Touch: a tap (click; never touchstart, never preventDefault) plays one ripple J → Q.
+    const onClick = (event: MouseEvent) => {
+      const pointerType = (event as PointerEvent).pointerType;
+      if (pointerType ? pointerType !== "touch" : !touch.matches) return;
+      if (reduced.matches) {
+        const index = keyAt(event);
+        if (index >= 0) beat(index);
+        return;
+      }
+      if (rippling) return;
+      rippling = true;
+      cancel(settle);
+      clearAll();
+      flush();
+      KEYS.forEach((_, index) => later(() => add(index, "mark-hit"), index * RIPPLE_STAGGER));
+      later(() => { clearAll(); rippling = false; }, Q_INDEX * RIPPLE_STAGGER + BEAT_MS);
+    };
+
+    el.addEventListener("pointermove", onMove);
+    el.addEventListener("pointerenter", onMove);
+    el.addEventListener("pointerleave", onLeave);
+    el.addEventListener("click", onClick);
+    return () => {
+      el.removeEventListener("pointermove", onMove);
+      el.removeEventListener("pointerenter", onMove);
+      el.removeEventListener("pointerleave", onLeave);
+      el.removeEventListener("click", onClick);
+      timers.forEach((id) => window.clearTimeout(id));
+      timers.clear();
+      clearAll();
+    };
+  }, []);
+
   return (
-    <div ref={ref} className={`site-footer__wordmark-reveal${interactive ? " is-interactive" : ""}`} aria-hidden="true">
-      <WordmarkSvg variant="base" className="site-footer__wordmark--base" />
-      <WordmarkSvg variant="logo" className="site-footer__wordmark--reveal" />
+    <div ref={ref} className="site-footer__wordmark-reveal" aria-hidden="true">
+      <WordmarkSvg variant="base" className="site-footer__wordmark--base" uid={uid} />
+      <WordmarkSvg variant="logo" className="site-footer__wordmark--reveal" uid={uid} />
       {interactive && (
         <>
-          <WordmarkSvg variant="glow" className="site-footer__wordmark--glow" clipId={clipId} />
           <div className="site-wordmark-cursors">
             {BOTS.map((bot, i) => (
               <div key={bot.label} ref={(node) => { botRefs.current[i] = node; }} className={`site-wordmark-bot site-wordmark-bot--${bot.tone}`}>
                 <Pointer label={bot.label} className="" />
               </div>
             ))}
-            <div ref={youRef} className="site-wordmark-you"><Pointer label="You" className="site-wordmark-cursor--you" /></div>
+            <div ref={youRef} className="site-wordmark-you"><Pointer label="you" className="site-wordmark-cursor--you" /></div>
           </div>
         </>
       )}

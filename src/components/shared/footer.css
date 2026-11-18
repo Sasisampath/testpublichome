@@ -37,7 +37,7 @@
    the logo's own paths (footer-wordmark-shapes.ts), same box as the old <img>. */
 .site-footer__wordmark-reveal { position: relative; width: 80%; margin: clamp(48px, 6.4vw, 92px) auto 0; padding-bottom: 12px; }
 .site-footer__wordmark { display: block; width: 100%; height: auto; aspect-ratio: 382 / 63.5; overflow: visible; }
-.site-footer__wordmark--reveal, .site-footer__wordmark--glow { position: absolute; inset: 0 0 12px; }
+.site-footer__wordmark--reveal { position: absolute; inset: 0 0 12px; }
 /* Letters: dark fill close to the footer background + a faint 1px outline. */
 .site-wordmark__letter { fill: color-mix(in srgb, var(--footer-bg) 93%, #fff); stroke: rgb(255 255 255 / .16); stroke-width: 1px; vector-effect: non-scaling-stroke; }
 /* Scroll reveal (JS adds .is-scroll-reveal; reduced motion keeps the plain logo). */
@@ -45,25 +45,50 @@
 /* Unrevealed state: faint monochrome, Q included; outline and ring colour come from the top layer. */
 .is-scroll-reveal .site-footer__wordmark--base { opacity: .1; filter: grayscale(1) brightness(.6); }
 /* Broad, soft blend (~32%) bottom → top. */
-.is-scroll-reveal .site-footer__wordmark--reveal {
+.is-scroll-reveal:not(.is-revealed) .site-footer__wordmark--reveal {
   -webkit-mask-image: linear-gradient(to top, #000 0%, #000 var(--reveal), rgb(0 0 0 / .6) calc(var(--reveal) + 7%), rgb(0 0 0 / .26) calc(var(--reveal) + 16%), rgb(0 0 0 / .07) calc(var(--reveal) + 25%), transparent calc(var(--reveal) + 32%), transparent 100%);
   mask-image: linear-gradient(to top, #000 0%, #000 var(--reveal), rgb(0 0 0 / .6) calc(var(--reveal) + 7%), rgb(0 0 0 / .26) calc(var(--reveal) + 16%), rgb(0 0 0 / .07) calc(var(--reveal) + 25%), transparent calc(var(--reveal) + 32%), transparent 100%);
 }
 .site-footer__wordmark-reveal:not(.is-scroll-reveal) .site-footer__wordmark--base { visibility: hidden; }
 
-/* ── Hover glow + decorative cursors (fine pointers only; JS adds .is-interactive) ── */
-.site-footer__wordmark-reveal.is-interactive { --x: 50%; --y: 50%; --glow-r: clamp(90px, 13vw, 200px); cursor: none; }
-/* Brighter letters, clipped to the logo shape (SVG clipPath) and limited to a soft
-   spotlight around the pointer; intersected with the scroll-reveal mask. */
-.site-footer__wordmark--glow { opacity: 0; transition: opacity .25s ease; pointer-events: none;
-  -webkit-mask-image: radial-gradient(circle var(--glow-r) at var(--x) var(--y), #000 0%, rgb(0 0 0 / .55) 32%, rgb(0 0 0 / .18) 62%, transparent 100%), linear-gradient(to top, #000 0%, #000 var(--reveal, 100%), transparent calc(var(--reveal, 100%) + 32%));
-  -webkit-mask-composite: source-in;
-  mask-image: radial-gradient(circle var(--glow-r) at var(--x) var(--y), #000 0%, rgb(0 0 0 / .55) 32%, rgb(0 0 0 / .18) 62%, transparent 100%), linear-gradient(to top, #000 0%, #000 var(--reveal, 100%), transparent calc(var(--reveal, 100%) + 32%));
-  mask-composite: intersect;
+/* ── Equalizer (footer-wordmark.tsx toggles .mark-hit / .mark-echo on each key) ── */
+/* LED meters exist only while their key plays: violet on the hit key, a smaller
+   delayed green echo on its neighbours. Clipped to the letter in the SVG. */
+.mark-meter { display: none; }
+.mark-key.mark-hit > .mark-meter--hit, .mark-key.mark-echo > .mark-meter--echo { display: inline; }
+.mark-meter--echo { opacity: .65; }
+/* Attached only while playing: SVG children of a display:none group still run
+   their animations in Chromium, so an always-on animation would finish unseen. */
+.mark-column { transform-box: fill-box; clip-path: inset(100% 0 0); }
+.mark-key.mark-hit > .mark-meter--hit .mark-column, .mark-key.mark-echo > .mark-meter--echo .mark-column { animation: mark-level 670ms ease-out both; }
+.mark-key.mark-hit { animation: mark-lift 640ms ease-out both; }
+.mark-key.mark-echo { --lift: -.8px; animation: mark-lift 550ms 75ms ease-out both; }
+.mark-key.mark-hit > .site-wordmark__letter { animation: mark-light 680ms ease-out both; }
+/* Q: its disc and rings pulse once (only when Q itself is played). */
+.mark-speaker { transform-origin: 350.6px 29.1px; }
+.mark-key.mark-hit > .mark-speaker { animation: mark-bass 700ms ease-out both; }
+@keyframes mark-lift { 0%, 100% { transform: translateY(0); } 18% { transform: translateY(var(--lift, -2px)); } 46% { transform: translateY(.25px); } }
+/* Explicit end points (the resting letter colours): interpolating from the
+   color-mix() fill directly renders wrong colours in Chromium. */
+@keyframes mark-light { 0%, 100% { fill: rgb(27 26 28); stroke: rgb(255 255 255 / .16); } 20% { fill: #3a3748; stroke: #f1edff; } }
+@keyframes mark-level {
+  0%, 100% { clip-path: inset(100% 0 0); }
+  14% { clip-path: inset(4% 0 0); }
+  30% { clip-path: inset(68% 0 0); }
+  43% { clip-path: inset(15% 0 0); }
+  60% { clip-path: inset(66% 0 0); }
+  73% { clip-path: inset(40% 0 0); }
 }
-.site-footer__wordmark--glow .site-wordmark__letter { fill: color-mix(in srgb, var(--footer-bg) 86%, #fff); stroke: rgb(255 255 255 / .42); stroke-width: 3px; }
-.is-hovering .site-footer__wordmark--glow { opacity: 1; }
+@keyframes mark-bass { 0%, 100% { transform: scale(1); } 30% { transform: scale(1.18); } 62% { transform: scale(.98); } }
+/* Reduced motion: no movement or meters, just a static highlight on the played key. */
+@media (prefers-reduced-motion: reduce) {
+  .mark-key, .mark-key * { animation: none !important; }
+  .mark-meter, .mark-key.mark-hit > .mark-meter--hit, .mark-key.mark-echo > .mark-meter--echo { display: none; }
+  .mark-key.mark-hit > .site-wordmark__letter { fill: #514b70; stroke: #e5dbff; }
+}
 
+/* ── Decorative cursors (fine pointers only; JS adds .is-interactive) ── */
+.site-footer__wordmark-reveal.is-interactive { cursor: none; }
 /* Cursor layer: decorative, never blocks clicks, never focusable. */
 .site-wordmark-cursors { position: absolute; inset: 0; pointer-events: none; }
 .site-wordmark-bot, .site-wordmark-you { position: absolute; top: 0; left: 0; will-change: transform; }
@@ -78,7 +103,7 @@
 .site-wordmark-bot--vendor .site-wordmark-cursor { --tone: var(--color-vendor); }
 .site-wordmark-bot--partner .site-wordmark-cursor { --tone: var(--color-partner); }
 .site-wordmark-bot--jazz .site-wordmark-cursor { --tone: #fff; }
-.site-wordmark-cursor--you .site-wordmark-cursor__label { border-color: transparent; background: #fff; color: var(--color-text-primary); }
+.site-wordmark-cursor--you .site-wordmark-cursor__label { border-color: transparent; background: #fff; color: var(--color-text-primary, #242424); }
 
 /* Footer tooltips: above the mark, never affect layout. */
 .site-tip { position: relative; display: inline-flex; }

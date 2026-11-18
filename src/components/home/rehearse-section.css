@@ -8,27 +8,26 @@
 .dh-rehearse__cta { margin-top: 32px; }
 
 /* ── Carousel ───────────────────────────────────────────────────── */
-/* A contained deck: the active card in front, its neighbours peeking out
-   --peek px on each side, all inside the column (nothing is clipped). */
-.dh-rehearse__carousel { --card-w: 400px; --peek: 28px; min-width: 0; }
-.dh-rh-viewport { display: grid; justify-items: center; padding-block: 8px; touch-action: pan-y; user-select: none; }
+/* The active card is centred; its neighbours sit a full card width + --card-gap
+   to each side (partly visible, cropped by the viewport), the rest wait hidden
+   behind it. --peek keeps a sliver of each neighbour in view on narrow columns. */
+.dh-rehearse__carousel { --card-w: 400px; --card-gap: 16px; --peek: 0px; min-width: 0; }
+.dh-rh-viewport { display: grid; justify-items: center; overflow: hidden; padding-block: 8px; touch-action: pan-y; user-select: none; }
 
 /* All cards share one grid cell; data-pos (prev / active / next / hidden) places each. */
 .dh-rh-card {
   --shift: 0px; --scale: 1;
   grid-area: 1 / 1; position: relative; display: flex; flex-direction: column; width: min(var(--card-w), calc(100% - 2 * var(--peek))); min-width: 0; padding: 20px 20px 18px;
-  border: 1px solid var(--dh-line); border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(28 19 48 / .04);
+  border: 1px solid var(--dh-line); border-radius: 20px; background: #fff; box-shadow: 0 8px 24px rgb(28 19 48 / .02);
   transform: translateX(var(--shift)) scale(var(--scale));
-  transition: transform .36s cubic-bezier(.4, 0, .2, 1), opacity .36s cubic-bezier(.4, 0, .2, 1), background-color .36s;
+  transition: transform .36s cubic-bezier(.4, 0, .2, 1), opacity .36s cubic-bezier(.4, 0, .2, 1);
 }
-.dh-rh-card > * { transition: opacity .2s; }
 .dh-rh-card[data-pos="active"] { z-index: 3; }
-/* Neighbours: slightly smaller, dimmed and blank, so only their edges show. */
-.dh-rh-card:is([data-pos="prev"], [data-pos="next"]) { --scale: .92; z-index: 2; background: color-mix(in srgb, var(--dh-ink) 3%, #fff); cursor: pointer; }
-.dh-rh-card[data-pos="prev"] { --shift: calc(-1 * (var(--peek) + 4%)); }
-.dh-rh-card[data-pos="next"] { --shift: calc(var(--peek) + 4%); }
-.dh-rh-card:not([data-pos="active"]) > * { opacity: 0; }
-.dh-rh-card[data-pos="hidden"] { --scale: .84; z-index: 1; opacity: 0; pointer-events: none; }
+/* Neighbours: slightly smaller and faded. */
+.dh-rh-card:is([data-pos="prev"], [data-pos="next"]) { --scale: .9; z-index: 2; opacity: .55; cursor: pointer; }
+.dh-rh-card[data-pos="prev"] { --shift: calc(-100% - var(--card-gap)); }
+.dh-rh-card[data-pos="next"] { --shift: calc(100% + var(--card-gap)); }
+.dh-rh-card[data-pos="hidden"] { --scale: .8; z-index: 1; opacity: 0; pointer-events: none; }
 /* A card switching sides appears in place, then fades in. */
 .dh-rh-card.is-jump { opacity: 0; transition: none; }
 
@@ -68,20 +67,26 @@
 
 /* ── Responsive ─────────────────────────────────────────────────── */
 @media (max-width: 1279px) {
-  .dh-rehearse__carousel { --card-w: 380px; --peek: 22px; }
-  .dh-rh-card { padding: 18px 18px 16px; }
+  .dh-rehearse__carousel { --card-w: 360px; --peek: 40px; }
   .dh-rh-card__title { font-size: 20px; }
+  /* Narrower card: stats and the button wrap instead of spilling out. */
   .dh-rh-card__foot { flex-wrap: wrap; }
 }
-@media (max-width: 767px) {
+/* Tablet: copy above, carousel full width so both neighbours stay in view. */
+@media (max-width: 1023px) {
   .dh-rehearse__grid { grid-template-columns: minmax(0, 1fr); gap: 40px; }
   .dh-rehearse__copy { text-align: center; }
   .dh-rehearse__copy h2, .dh-rehearse__copy p { margin-inline: auto; }
+  .dh-rehearse__carousel { --card-w: 400px; }
+  .dh-rh-card__foot { flex-wrap: nowrap; }
+}
+@media (max-width: 767px) {
   /* One full-width card at a time. */
   .dh-rehearse__carousel { --card-w: 100%; --peek: 0px; }
   .dh-rh-card:not([data-pos="active"]) { opacity: 0; pointer-events: none; }
   .dh-rh-card { padding: 16px; }
+  .dh-rh-card__foot { flex-wrap: wrap; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .dh-rh-card, .dh-rh-card > *, .dh-rh-dot::before, .dh-rh-start svg { transition: none; }
+  .dh-rh-card, .dh-rh-dot::before, .dh-rh-start svg { transition: none; }
 }
