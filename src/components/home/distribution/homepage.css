@@ -170,14 +170,11 @@
 .dh-proof-card__photo img { position: absolute; bottom: calc(var(--p-y) * -1px); left: calc(50% + var(--p-x) * 1px); width: calc(var(--p-size) * 1px); max-width: none; height: auto; transform: translateX(-50%); }
 .dh-proof-card__quote { flex: 1; min-width: 0; padding-top: 12px; }
 .dh-proof-card__mark { display: block; width: 44px; height: 38px; margin-bottom: 12px; transform: rotate(180deg); }
-.dh-proof-card blockquote { max-width: 696px; margin: 0; font-size: 24px; font-weight: 600; line-height: 1.334; letter-spacing: -.02em; color: var(--dh-ink); text-wrap: pretty; }
+.dh-proof-card blockquote { margin: 0; font-size: 24px; font-weight: 600; line-height: 1.334; letter-spacing: -.02em; color: var(--dh-ink); text-wrap: pretty; }
 .dh-proof-card figcaption { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 30px; margin-top: 24px; }
 .dh-proof-card__person { display: grid; font-size: 15px; line-height: 1.5; color: var(--dh-muted); }
 .dh-proof-card__person strong { font-size: 17px; font-weight: 600; color: var(--dh-ink); }
 .dh-proof-card__logo { width: auto; height: 24px; }
-.dh-proof-card__stat { display: flex; flex: 0 0 auto; flex-direction: column; justify-content: center; gap: 8px; min-height: 180px; padding-inline: 40px 18px; border-left: 1px solid color-mix(in srgb, var(--dh-ink) 14%, transparent); }
-.dh-proof-card__stat-value { font-size: 80px; font-weight: 700; line-height: .9; letter-spacing: -.053em; color: var(--dh-accent); }
-.dh-proof-card__stat-label { font-size: var(--fs-h3); font-weight: 600; line-height: 1.2; color: var(--dh-ink); white-space: nowrap; }
 
 .dh-proof__pager { display: flex; align-items: center; gap: 8px; width: fit-content; margin: 10px auto 0; padding: 15px 16px; border-radius: 300px; background: rgb(26 26 26 / .05); }
 .dh-proof__pager button { position: relative; width: 6px; height: 6px; overflow: hidden; border-radius: 100px; background: rgb(26 26 26 / .2); transition: width .35s var(--dh-ease), background-color .3s; }
@@ -254,7 +251,6 @@
 
 @media (max-width: 1199px) {
   .dh-proof-card { gap: 28px; }
-  .dh-proof-card__stat { padding-inline: 28px 8px; }
 }
 @media (max-width: 1023px) {
   .dh-how-grid, .dh-how-grid--buyer { grid-template-columns: minmax(0, 1fr); }
@@ -265,8 +261,7 @@
   .dh-how-intro { margin-bottom: 0; }
   .dh-how-steps .dh-agent-cta { order: 3; margin-top: 4px; }
   .dh-how-grid .dh-product-window { order: 2; }
-  .dh-proof-card { flex-wrap: wrap; min-height: 0; }
-  .dh-proof-card__stat { flex: 1 0 100%; flex-direction: row; align-items: center; gap: 20px; min-height: 0; padding: 22px 0 0; border-left: 0; border-top: 1px solid color-mix(in srgb, var(--dh-ink) 14%, transparent); }
+  .dh-proof-card { min-height: 0; }
   .dh-club-inner { flex-direction: column; align-items: stretch; }
   .dh-club-copy { flex-basis: auto; }
   .dh-club-photos { flex-basis: auto; width: 100%; max-width: 638px; }
@@ -278,7 +273,6 @@
   .dh-proof-card { flex-direction: column; align-items: stretch; gap: 24px; padding: 20px; border-radius: 24px; }
   .dh-proof-card__photo { flex: none; width: 260px; max-width: 100%; align-self: center; }
   .dh-proof-card blockquote { font-size: 21px; }
-  .dh-proof-card__stat-value { font-size: 64px; }
   .dh-club-inner { padding-block: 44px; }
   .dh-club-copy > p br { display: none; }
 }
