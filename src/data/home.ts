@@ -123,7 +123,6 @@ export type CustomerStory = {
   portraitFit: { size: number; x: number; y: number };
   tone: "buyer" | "vendor" | "partner";
   quote: string;
-  metric: { value: string; label: string };
   logo: string;
 };
 
@@ -138,7 +137,6 @@ export const CUSTOMER_STORIES: CustomerStory[] = [
     portraitFit: { size: 238.3, x: 0, y: 0 },
     tone: "partner",
     quote: "With JazzHQ, we were able to find the right partners, engage deeply with them and double revenue within a year.",
-    metric: { value: "2x", label: "Revenue within a year" },
     logo: "/assets/testimonials/logo-seamlesshr.svg",
   },
   {
@@ -149,7 +147,6 @@ export const CUSTOMER_STORIES: CustomerStory[] = [
     portraitFit: { size: 227.5, x: 0, y: 0 },
     tone: "buyer",
     quote: "I'm really proud of the partnership we've built with JazzHQ and I look forward to working with them in the future.",
-    metric: { value: "2x", label: "Revenue within a year" },
     logo: "/assets/logos/monday.svg",
   },
   {
@@ -160,7 +157,6 @@ export const CUSTOMER_STORIES: CustomerStory[] = [
     portraitFit: { size: 238, x: -11, y: 31 },
     tone: "vendor",
     quote: "The evening has been fantastic, lots of lived experiences from people. Loved working with the Jazz HQ team.",
-    metric: { value: "2x", label: "Revenue within a year" },
     logo: "/assets/logos/hubspot-trusted.svg",
   },
 ];

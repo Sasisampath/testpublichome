@@ -74,11 +74,6 @@ export function CustomerProof() {
                 <Image src={story.logo} alt={`${story.company} logo`} width={135} height={28} className="dh-proof-card__logo" />
               </figcaption>
             </div>
-
-            <div className="dh-proof-card__stat">
-              <p className="dh-proof-card__stat-value">{story.metric.value}</p>
-              <p className="dh-proof-card__stat-label">{story.metric.label}</p>
-            </div>
           </figure>
 
           {hasNav && (
