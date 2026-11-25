@@ -18,16 +18,11 @@ const offsetOf = (index: number, active: number) => ((index - active + 1 + COUNT
 const POSITIONS: Record<number, string> = { [-1]: "prev", 0: "active", 1: "next" };
 const positionOf = (index: number, active: number) => POSITIONS[offsetOf(index, active)] ?? "hidden";
 
-// External RehearseHQ destination, or a same-looking button that does nothing
-// while the URL has not been supplied yet.
-function RehearseLink({ href, className, children, tabIndex, onClick }: {
+function RehearseLink({ href, className, children, tabIndex }: {
   href: string | null; className: string; children: ReactNode; tabIndex?: number;
-  onClick?: (event: React.MouseEvent) => void;
 }) {
-  if (href) {
-    return <a href={href} target="_blank" rel="noopener noreferrer" className={className} tabIndex={tabIndex} onClick={onClick}>{children}</a>;
-  }
-  return <button type="button" className={className} tabIndex={tabIndex} onClick={onClick}>{children}</button>;
+  if (!href) return null;
+  return <a href={href} target="_blank" rel="noopener noreferrer" className={className} tabIndex={tabIndex}>{children}</a>;
 }
 
 function Banner({ src, alt, priority }: { src: string; alt: string; priority: boolean }) {
@@ -58,6 +53,7 @@ function ScenarioCard({ scenario, index, count, position, jumping, active, onSel
       aria-roledescription="slide"
       aria-label={`${index + 1} of ${count}`}
       aria-hidden={active ? undefined : true}
+      onClick={active ? undefined : (event) => { event.preventDefault(); onSelect(); }}
     >
       <div className="dh-rh-card__tags">
         <ul className="dh-rh-card__roles">
@@ -74,13 +70,11 @@ function ScenarioCard({ scenario, index, count, position, jumping, active, onSel
           <span className="dh-rh-card__divider" aria-hidden="true" />
           <span className="dh-rh-card__rate"><TrendingUp size={18} strokeWidth={1.75} aria-hidden="true" />{scenario.winRate}</span>
         </p>
-        {/* The whole card is clickable through this link (stretched with ::after);
-            on a neighbouring card the first click just brings it to the front. */}
+        {/* On the active card, a configured link stretches across the card. */}
         <RehearseLink
           href={scenario.roleplayUrl}
           className="dh-rh-start"
           tabIndex={active ? undefined : -1}
-          onClick={(event) => { if (!active) { event.preventDefault(); onSelect(); } }}
         >
           Start practice<ArrowRight size={16} strokeWidth={2} aria-hidden="true" />
           <span className="sr-only"> — {scenario.title}</span>

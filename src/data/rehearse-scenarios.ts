@@ -1,9 +1,8 @@
 // Content and destinations for the Homepage RehearseHQ section.
 // Everything editable lives here: scenarios, banner images and URLs.
 
-/** "Try RehearseHQ →" (left CTA): the main RehearseHQ website.
- *  TODO: paste the real URL. While null, the button is shown but does not navigate. */
-export const REHEARSE_URL: string | null = null;
+/** Destination for the main "Try RehearseHQ" CTA. */
+export const REHEARSE_URL = "https://www.rehearsehq.ai/";
 
 export type RehearseScenario = {
   id: string;
@@ -20,8 +19,7 @@ export type RehearseScenario = {
   image: string;
   /** Describes the banner for screen readers. */
   imageAlt: string;
-  /** "Start practice →" (card CTA): this scenario's own RehearseHQ roleplay.
-   *  TODO: paste each real URL. While null, the button is shown but does not navigate. */
+  /** Direct RehearseHQ roleplay URL. The card CTA is hidden until a URL is supplied. */
   roleplayUrl: string | null;
 };
 
