@@ -1,7 +1,7 @@
 /* Black footer, ending with the full white JAZZ·HQ wordmark. */
 .site-footer { background: var(--footer-bg, #0a090b); color: #fff; }
 .site-footer__inner { max-width: var(--max-content, 1400px); margin-inline: auto; padding: 36px var(--page-padding, 24px) 0; }
-.site-footer__main { display: grid; grid-template-columns: minmax(0, 1.5fr) auto minmax(0, 1.35fr); gap: clamp(32px, 4vw, 64px); align-items: start; }
+.site-footer__main { display: grid; grid-template-columns: minmax(208px, 1fr) minmax(0, 2.2fr) minmax(172px, .85fr); gap: clamp(24px, 3vw, 48px); align-items: start; }
 
 .site-footer__logo img { display: block; width: auto; height: 26px; }
 .site-footer__follow { margin-top: 16px; font-size: 15px; color: #fff; }
@@ -15,7 +15,7 @@
 .site-tip:hover .site-footer__mark, .site-tip:focus-within .site-footer__mark, .site-tip.is-open .site-footer__mark { transform: translateY(-2px); filter: brightness(1.08); }
 .site-footer__address { margin-top: 16px; font-size: 14px; font-style: normal; line-height: 1.5; color: rgb(255 255 255 / .82); }
 
-.site-footer__nav { display: flex; gap: clamp(32px, 5vw, 72px); }
+.site-footer__nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)) minmax(0, 1.4fr); gap: 24px; }
 .site-footer__title { font-size: 17px; font-weight: 600; line-height: 1.4; color: #fff; }
 .site-footer__col ul { display: grid; gap: 10px; margin: 12px 0 0; padding: 0; list-style: none; }
 .site-footer__link { font-size: 15px; line-height: 1.5; color: rgb(255 255 255 / .72); cursor: pointer; transition: color .2s; }
@@ -119,12 +119,12 @@
 @media (prefers-reduced-motion: reduce) { .site-tip__panel, .site-footer__mark, .site-footer__ai-logo { transition: none; } }
 
 @media (max-width: 1023px) {
-  .site-footer__main { grid-template-columns: minmax(0, 1fr) auto; }
+  .site-footer__main { grid-template-columns: minmax(208px, 1fr) minmax(0, 2fr); }
   .site-footer__ai { grid-column: 1 / -1; padding: 24px 0 0; border-left: 0; border-top: 1px solid rgb(255 255 255 / .12); }
 }
 @media (max-width: 639px) {
   .site-footer__main { grid-template-columns: minmax(0, 1fr); }
-  .site-footer__nav { gap: 48px; }
+  .site-footer__nav { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .site-footer__bottom { flex-direction: column; align-items: flex-start; }
 }
 

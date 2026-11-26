@@ -164,6 +164,7 @@
 
 /* ── Trusted by (Figma node 3052:1100) — one story at a time ── */
 .dh-proof { padding-top: var(--dh-section-y); }
+.dh-proof h2 { scroll-margin-top: 88px; }
 .dh-proof__stage { margin-top: 60px; }
 .dh-proof-card { display: flex; align-items: center; gap: 40px; min-height: 277px; margin: 0; padding: 30px; border-radius: 30px; background: color-mix(in srgb, var(--dh-accent) 12%, #fff); animation: dh-proof-in .5s var(--dh-ease) both; }
 .dh-proof-card__photo { position: relative; flex: 0 0 260px; height: 217px; overflow: hidden; border-radius: 20px; background: var(--dh-accent); }
