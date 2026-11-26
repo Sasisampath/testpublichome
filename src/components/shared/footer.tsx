@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
+import { FOOTER_BUYERS_GUIDES, FOOTER_COMPANY, FOOTER_HELP, FOOTER_LEGAL, ROUTES } from "@/data/navigation";
 import { NavItem } from "@/components/ui/nav-item";
 import { FooterAI } from "./footer-ai";
 import { FooterTip } from "./footer-tip";
@@ -80,6 +80,7 @@ export function Footer() {
             <div className="site-footer__nav">
               <LinkColumn title="Company" links={FOOTER_COMPANY} />
               <LinkColumn title="Help & Support" links={FOOTER_HELP} />
+              <LinkColumn title="Buyer’s Guides" links={FOOTER_BUYERS_GUIDES} />
             </div>
 
             <div className="site-footer__ai">

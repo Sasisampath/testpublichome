@@ -2,8 +2,11 @@
 // `href: null` means the destination is not implemented in this repo yet:
 // the item is shown but does not navigate. Developers wire the real
 // destinations here after design approval.
+const BUYERS_GUIDES_URL = "https://buyerguides.vercel.app/buyers-guide/";
+
 export const ROUTES = {
   home: "/",
+  stories: "/#stories",
   vendorForm: "/for-vendors",
   partnerForm: "/for-partners",
   buyerForm: "/for-buyers",
@@ -15,6 +18,7 @@ export const NAV_ITEMS: { label: string; href: NavDestination }[] = [
   { label: "Home", href: ROUTES.home },
   { label: "About Us", href: null },
   { label: "Marketplace", href: null },
+  { label: "Stories", href: ROUTES.stories },
 ];
 
 export type JourneyKey = "buyer" | "vendor" | "partner";
@@ -34,6 +38,12 @@ export const FOOTER_HELP: { label: string; href: NavDestination }[] = [
   { label: "Contact us", href: null },
   { label: "Privacy policy", href: null },
   { label: "Terms and conditions", href: null },
+];
+
+export const FOOTER_BUYERS_GUIDES = [
+  { label: "All Buyer’s Guides", href: BUYERS_GUIDES_URL },
+  { label: "PRM Software Guide", href: `${BUYERS_GUIDES_URL}best-prm-software/` },
+  { label: "Channel Management Guide", href: `${BUYERS_GUIDES_URL}channel-management-software/` },
 ];
 
 export const FOOTER_LEGAL: { label: string; href: NavDestination }[] = [

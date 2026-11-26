@@ -40,9 +40,9 @@ export function CustomerProof() {
   const fit = story.portraitFit;
 
   return (
-    <section className="dh-proof dh-container" aria-labelledby="proof-title">
+    <section className="dh-proof dh-container" aria-labelledby="stories">
       <Reveal className="dh-section-head">
-        <h2 id="proof-title">Trusted by</h2>
+        <h2 id="stories">Trusted by</h2>
         <p>Hear from technology partners running active operations on JazzHQ.</p>
       </Reveal>
 
